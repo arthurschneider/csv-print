@@ -12,20 +12,20 @@ public class CSVDokument<T> {
 	private String delimiter;
 	private List<String> header;
 	private List<T> content;
-	private List<Function<T, String>> functions;
+	private List<Function<T, Object>> functions;
 
 	public static class Builder<T> {
 		// Required parameters
 		List<String> header;
 		List<T> content;
-		List<Function<T, String>> functions;
+		List<Function<T, Object>> functions;
 
 		// Optional
 		private String escape = "\n";
 		private String delimiter = ";";
 		private String quote = "";
 
-		public Builder(List<String> header, List<T> content, List<Function<T, String>> functions) {
+		public Builder(List<String> header, List<T> content, List<Function<T, Object>> functions) {
 			this.header = Objects.requireNonNull(header);
 			this.content = Objects.requireNonNull(content);
 			this.functions = Objects.requireNonNull(functions);
@@ -88,12 +88,12 @@ public class CSVDokument<T> {
 		return (functions.stream().map(f -> buildCell(bean, f)).collect(Collectors.joining(delimiter)));
 	}
 
-	private String buildCell(T bean, Function<T, String> function) {
+	private String buildCell(T bean, Function<T, Object> function) {
 		return addQuotes(function.apply(bean));
 	}
 
-	private String addQuotes(String fieldContent) {
-		return quote + fieldContent + quote;
+	private String addQuotes(Object fieldContent) {
+		return quote + fieldContent.toString() + quote;
 	}
 
 }

@@ -1,7 +1,7 @@
 package de.intelllinet.csvprint.mock.models;
 
 /**
- * @author arthur
+ * @author Arthur Schneider
  *
  */
 public class Adress {
