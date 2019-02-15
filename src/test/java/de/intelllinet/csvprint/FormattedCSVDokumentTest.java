@@ -7,22 +7,24 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import de.intelllinet.csvprint.formatter.DateAndTimeFormatter;
+import de.intelllinet.csvprint.formatter.NumberFormatter;
 import de.intelllinet.csvprint.mock.models.Adress;
 import de.intelllinet.csvprint.mock.models.Person;
+import de.intelllinet.csvprint.util.ColumnElement;
 
-public class CSVDokumentTest {
+public class FormattedCSVDokumentTest {
 
 	private static List<String> adressHeader;
 	private static List<String> peopleHeader;
 	private static List<Adress> adresses;
 	private static List<Person> people;
-	private static List<Function<Adress, Object>> adressFunctions;
-	private static List<Function<Person, Object>> peopleFunctions;
+	private static List<ColumnElement<Adress>> adressFunctions;
+	private static List<ColumnElement<Person>> peopleFunctions;
 
 	@BeforeAll
 	static void setUpBeforeClass() throws Exception {
@@ -38,10 +40,10 @@ public class CSVDokumentTest {
 		adresses.add(new Adress("80331", "München", "Kloßaue", "9"));
 
 		adressFunctions = new ArrayList<>();
-		adressFunctions.add(Adress::getZip);
-		adressFunctions.add(Adress::getCity);
-		adressFunctions.add(Adress::getStreet);
-		adressFunctions.add(Adress::getHouseNumber);
+		adressFunctions.add(new ColumnElement<>(Adress::getZip, null));
+		adressFunctions.add(new ColumnElement<>(Adress::getCity, null));
+		adressFunctions.add(new ColumnElement<>(Adress::getStreet, null));
+		adressFunctions.add(new ColumnElement<>(Adress::getHouseNumber, null));
 
 		peopleHeader = new ArrayList<>();
 		peopleHeader.add("Age");
@@ -56,39 +58,40 @@ public class CSVDokumentTest {
 		people.add(new Person(38, "Lisa", "Schuster", true, LocalDate.of(1981, 1, 15), 3010.45));
 
 		peopleFunctions = new ArrayList<>();
-		peopleFunctions.add(Person::getAge);
-		peopleFunctions.add(Person::getFirstname);
-		peopleFunctions.add(Person::getLastname);
-		peopleFunctions.add(Person::isHasCar);
-		peopleFunctions.add(Person::getBirthday);
-		peopleFunctions.add(Person::getIncome);
+		peopleFunctions.add(new ColumnElement<>(Person::getAge, null));
+		peopleFunctions.add(new ColumnElement<>(Person::getFirstname, null));
+		peopleFunctions.add(new ColumnElement<>(Person::getLastname, null));
+		peopleFunctions.add(new ColumnElement<>(Person::isHasCar, null));
+		peopleFunctions.add(new ColumnElement<>(Person::getBirthday, new DateAndTimeFormatter("dd.MM.yyyy")));
+		peopleFunctions.add(new ColumnElement<>(Person::getIncome, new NumberFormatter()));
 
 	}
 
 	@Test
 	public void testBuilderWithoutHeader() throws Exception {
 		assertThrows(NullPointerException.class, () -> {
-			new CSVDokument.Builder<>(null, adresses, adressFunctions);
+			new FormattedCSVDokument.Builder<>(null, adresses, adressFunctions);
 		});
 	}
 
 	@Test
 	public void testBuilderWithoutContent() throws Exception {
 		assertThrows(NullPointerException.class, () -> {
-			new CSVDokument.Builder<>(adressHeader, null, adressFunctions);
+			new FormattedCSVDokument.Builder<>(adressHeader, null, adressFunctions);
 		});
 	}
 
 	@Test
 	public void testBuilderWithoutFuntions() throws Exception {
 		assertThrows(NullPointerException.class, () -> {
-			new CSVDokument.Builder<>(adressHeader, adresses, null);
+			new NormCSVDokument.Builder<>(adressHeader, adresses, null);
 		});
 	}
 
 	@Test
 	public void testPrintAdressesSuccessfully() throws Exception {
-		CSVDokument<Adress> dokument = new CSVDokument.Builder<>(adressHeader, adresses, adressFunctions).build();
+		CSVDokument<Adress> dokument = new FormattedCSVDokument.Builder<>(adressHeader, adresses, adressFunctions)
+				.build();
 		byte[] actualOutput = dokument.print();
 
 		String content = new String(actualOutput);
@@ -102,21 +105,23 @@ public class CSVDokumentTest {
 
 	@Test
 	public void testPrintPeopleSuccessfully() throws Exception {
-		CSVDokument<Person> dokument = new CSVDokument.Builder<>(peopleHeader, people, peopleFunctions).build();
+		CSVDokument<Person> dokument = new FormattedCSVDokument.Builder<>(peopleHeader, people, peopleFunctions)
+				.build();
 		byte[] actualOutput = dokument.print();
 
 		String content = new String(actualOutput);
 
 		String expectedContent = "Age;Firstname;Lastname;Has Car;Birthday;Income in €\n" //
-				+ "18;Maik;Muster;false;2001-01-12;120.21\n" //
-				+ "38;Lisa;Schuster;true;1981-01-15;3010.45";
+				+ "18;Maik;Muster;false;12.01.2001;120,21\n" //
+				+ "38;Lisa;Schuster;true;15.01.1981;3.010,45";
 
 		assertEquals(expectedContent, content);
 	}
 
 	@Test
 	public void testPrintWithEmpyContent() throws Exception {
-		CSVDokument<Adress> dokument = new CSVDokument.Builder<>(adressHeader, emptyList(), adressFunctions).build();
+		CSVDokument<Adress> dokument = new FormattedCSVDokument.Builder<>(adressHeader, emptyList(), adressFunctions)
+				.build();
 		byte[] actualOutput = dokument.print();
 
 		String content = new String(actualOutput);
@@ -128,7 +133,7 @@ public class CSVDokumentTest {
 
 	@Test
 	public void testPrintWithEmpyFuntions() throws Exception {
-		CSVDokument<Adress> dokument = new CSVDokument.Builder<>(adressHeader, adresses, emptyList()).build();
+		CSVDokument<Adress> dokument = new FormattedCSVDokument.Builder<>(adressHeader, adresses, emptyList()).build();
 		byte[] actualOutput = dokument.print();
 
 		String content = new String(actualOutput);
