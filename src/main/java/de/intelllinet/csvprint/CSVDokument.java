@@ -1,6 +1,6 @@
 package de.intelllinet.csvprint;
 
-public interface CSVDokument<T> {
+public interface CSVDokument {
 
 	byte[] print();
 }

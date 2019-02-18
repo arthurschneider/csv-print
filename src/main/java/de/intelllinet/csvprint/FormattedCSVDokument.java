@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 import de.intelllinet.csvprint.formatter.Formatter;
 import de.intelllinet.csvprint.util.ColumnElement;
 
-public class FormattedCSVDokument<T> implements CSVDokument<T> {
+public class FormattedCSVDokument<T> implements CSVDokument {
 
 	private String escape;
 	private String quote;
@@ -95,18 +95,15 @@ public class FormattedCSVDokument<T> implements CSVDokument<T> {
 	private String buildCell(T bean, ColumnElement<T> element) {
 		Formatter formatter = element.getFormatter();
 		Function<T, Object> function = element.getFunction();
-		return formatCell(bean, formatter, function);
+		String foramtedCell = formatCell(bean, formatter, function);
+		return addQuotes(foramtedCell);
 	}
 
 	private String formatCell(T bean, Formatter formatter, Function<T, Object> function) {
 		if (formatter == null) {
-			return extractCell(bean, function);
+			return function.apply(bean).toString();
 		}
-		return addQuotes(formatter.format(function.apply(bean)));
-	}
-
-	private String extractCell(T bean, Function<T, Object> function) {
-		return addQuotes(function.apply(bean));
+		return formatter.format(function.apply(bean));
 	}
 
 	private String addQuotes(Object fieldContent) {

@@ -5,13 +5,13 @@ import java.util.Locale;
 
 public class NumberFormatter implements Formatter {
 
-	Locale locale = Locale.GERMANY;
+	Locale locale;
 
 	public NumberFormatter() {
+		locale = Locale.GERMANY;
 	}
 
 	public NumberFormatter(Locale locale) {
-		super();
 		this.locale = locale;
 	}
 

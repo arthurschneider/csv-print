@@ -5,7 +5,7 @@ import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class NormCSVDokument<T> implements CSVDokument<T> {
+public class NormCSVDokument<T> implements CSVDokument {
 
 	private String escape;
 	private String quote;
@@ -93,8 +93,8 @@ public class NormCSVDokument<T> implements CSVDokument<T> {
 		return addQuotes(function.apply(bean));
 	}
 
-	private String addQuotes(Object fieldContent) {
-		return quote + fieldContent.toString() + quote;
+	private String addQuotes(Object cellContent) {
+		return quote + cellContent.toString() + quote;
 	}
 
 }

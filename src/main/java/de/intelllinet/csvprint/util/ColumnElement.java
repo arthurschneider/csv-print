@@ -9,8 +9,12 @@ public class ColumnElement<T> {
 	private Function<T, Object> function;
 	private Formatter formatter;
 
+	public ColumnElement(Function<T, Object> function) {
+		this.function = function;
+		this.formatter = null;
+	}
+
 	public ColumnElement(Function<T, Object> function, Formatter formatter) {
-		super();
 		this.function = function;
 		this.formatter = formatter;
 	}

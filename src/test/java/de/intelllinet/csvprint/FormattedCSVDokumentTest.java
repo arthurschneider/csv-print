@@ -90,8 +90,7 @@ public class FormattedCSVDokumentTest {
 
 	@Test
 	public void testPrintAdressesSuccessfully() throws Exception {
-		CSVDokument<Adress> dokument = new FormattedCSVDokument.Builder<>(adressHeader, adresses, adressFunctions)
-				.build();
+		CSVDokument dokument = new FormattedCSVDokument.Builder<>(adressHeader, adresses, adressFunctions).build();
 		byte[] actualOutput = dokument.print();
 
 		String content = new String(actualOutput);
@@ -105,8 +104,7 @@ public class FormattedCSVDokumentTest {
 
 	@Test
 	public void testPrintPeopleSuccessfully() throws Exception {
-		CSVDokument<Person> dokument = new FormattedCSVDokument.Builder<>(peopleHeader, people, peopleFunctions)
-				.build();
+		CSVDokument dokument = new FormattedCSVDokument.Builder<>(peopleHeader, people, peopleFunctions).build();
 		byte[] actualOutput = dokument.print();
 
 		String content = new String(actualOutput);
@@ -120,8 +118,7 @@ public class FormattedCSVDokumentTest {
 
 	@Test
 	public void testPrintWithEmpyContent() throws Exception {
-		CSVDokument<Adress> dokument = new FormattedCSVDokument.Builder<>(adressHeader, emptyList(), adressFunctions)
-				.build();
+		CSVDokument dokument = new FormattedCSVDokument.Builder<>(adressHeader, emptyList(), adressFunctions).build();
 		byte[] actualOutput = dokument.print();
 
 		String content = new String(actualOutput);
@@ -133,7 +130,7 @@ public class FormattedCSVDokumentTest {
 
 	@Test
 	public void testPrintWithEmpyFuntions() throws Exception {
-		CSVDokument<Adress> dokument = new FormattedCSVDokument.Builder<>(adressHeader, adresses, emptyList()).build();
+		CSVDokument dokument = new FormattedCSVDokument.Builder<>(adressHeader, adresses, emptyList()).build();
 		byte[] actualOutput = dokument.print();
 
 		String content = new String(actualOutput);
