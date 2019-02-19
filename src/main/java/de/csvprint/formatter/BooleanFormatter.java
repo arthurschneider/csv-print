@@ -1,6 +1,6 @@
-package de.intelllinet.csvprint.formatter;
+package de.csvprint.formatter;
 
-import de.intellinet.utils.BoolPattern;
+import de.csvprint.utils.BoolPattern;
 
 public class BooleanFormatter implements Formatter {
 

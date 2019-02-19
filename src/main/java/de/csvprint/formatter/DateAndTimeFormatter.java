@@ -1,4 +1,4 @@
-package de.intelllinet.csvprint.formatter;
+package de.csvprint.formatter;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;

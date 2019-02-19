@@ -1,4 +1,4 @@
-package de.intellinet.utils;
+package de.csvprint.utils;
 
 public enum BoolPattern {
 	

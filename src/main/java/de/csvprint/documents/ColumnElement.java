@@ -1,8 +1,8 @@
-package de.intelllinet.csvprint.util;
+package de.csvprint.documents;
 
 import java.util.function.Function;
 
-import de.intelllinet.csvprint.formatter.Formatter;
+import de.csvprint.formatter.Formatter;
 
 public class ColumnElement<T> {
 

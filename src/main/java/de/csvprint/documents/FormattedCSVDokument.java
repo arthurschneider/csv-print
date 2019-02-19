@@ -1,10 +1,8 @@
-package de.intelllinet.csvprint;
+package de.csvprint.documents;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
-
-import de.intelllinet.csvprint.util.ColumnElement;
 
 public class FormattedCSVDokument<T> implements CSVDokument {
 

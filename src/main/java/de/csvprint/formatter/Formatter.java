@@ -1,4 +1,4 @@
-package de.intelllinet.csvprint.formatter;
+package de.csvprint.formatter;
 
 public interface Formatter {
 

@@ -11,11 +11,13 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import de.intelllinet.csvprint.formatter.DateAndTimeFormatter;
-import de.intelllinet.csvprint.formatter.NumberFormatter;
+import de.csvprint.documents.CSVDokument;
+import de.csvprint.documents.ColumnElement;
+import de.csvprint.documents.FormattedCSVDokument;
+import de.csvprint.formatter.DateAndTimeFormatter;
+import de.csvprint.formatter.NumberFormatter;
 import de.intelllinet.csvprint.mock.models.Adress;
 import de.intelllinet.csvprint.mock.models.Person;
-import de.intelllinet.csvprint.util.ColumnElement;
 
 public class FormattedCSVDokumentTest {
 

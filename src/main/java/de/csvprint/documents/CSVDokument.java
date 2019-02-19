@@ -1,4 +1,4 @@
-package de.intelllinet.csvprint;
+package de.csvprint.documents;
 
 public interface CSVDokument {
 
