@@ -84,16 +84,15 @@ public class FormattedCSVDokumentTest {
 	@Test
 	public void testBuilderWithoutFuntions() throws Exception {
 		assertThrows(NullPointerException.class, () -> {
-			new NormCSVDokument.Builder<>(adressHeader, adresses, null);
+			new FormattedCSVDokument.Builder<>(adressHeader, adresses, null);
 		});
 	}
 
 	@Test
 	public void testPrintAdressesSuccessfully() throws Exception {
 		CSVDokument dokument = new FormattedCSVDokument.Builder<>(adressHeader, adresses, adressFunctions).build();
-		byte[] actualOutput = dokument.print();
 
-		String content = new String(actualOutput);
+		String content = new String(dokument.print());
 
 		String expectedContent = "Zip;City;Street;Nr.\n" //
 				+ "50226;Frechen;Freiheitsring;14 a\n" //
@@ -105,9 +104,8 @@ public class FormattedCSVDokumentTest {
 	@Test
 	public void testPrintPeopleSuccessfully() throws Exception {
 		CSVDokument dokument = new FormattedCSVDokument.Builder<>(peopleHeader, people, peopleFunctions).build();
-		byte[] actualOutput = dokument.print();
 
-		String content = new String(actualOutput);
+		String content = new String(dokument.print());
 
 		String expectedContent = "Age;Firstname;Lastname;Has Car;Birthday;Income in €\n" //
 				+ "18;Maik;Muster;false;12.01.2001;120,21\n" //
@@ -119,9 +117,8 @@ public class FormattedCSVDokumentTest {
 	@Test
 	public void testPrintWithEmpyContent() throws Exception {
 		CSVDokument dokument = new FormattedCSVDokument.Builder<>(adressHeader, emptyList(), adressFunctions).build();
-		byte[] actualOutput = dokument.print();
 
-		String content = new String(actualOutput);
+		String content = new String(dokument.print());
 
 		String expectedContent = "Zip;City;Street;Nr.\n";
 
@@ -131,9 +128,8 @@ public class FormattedCSVDokumentTest {
 	@Test
 	public void testPrintWithEmpyFuntions() throws Exception {
 		CSVDokument dokument = new FormattedCSVDokument.Builder<>(adressHeader, adresses, emptyList()).build();
-		byte[] actualOutput = dokument.print();
 
-		String content = new String(actualOutput);
+		String content = new String(dokument.print());
 
 		String expectedContent = "Zip;City;Street;Nr.\n";
 

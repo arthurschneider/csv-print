@@ -12,7 +12,6 @@ public class Person {
 	private double income;
 
 	public Person(int age, String firstname, String lastname, boolean hasCar, LocalDate birthday, double income) {
-		super();
 		this.age = age;
 		this.firstname = firstname;
 		this.lastname = lastname;

@@ -19,6 +19,10 @@ public class ColumnElement<T> {
 		this.formatter = formatter;
 	}
 
+	public boolean hasFormatter() {
+		return formatter != null;
+	}
+
 	public Function<T, Object> getFunction() {
 		return function;
 	}

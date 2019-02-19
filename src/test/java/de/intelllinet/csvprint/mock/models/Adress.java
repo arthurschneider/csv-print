@@ -15,7 +15,6 @@ public class Adress {
 	}
 
 	public Adress(String zip, String city, String street, String houseNumber) {
-		super();
 		this.zip = zip;
 		this.city = city;
 		this.street = street;

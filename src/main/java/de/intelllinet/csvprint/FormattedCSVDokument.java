@@ -2,20 +2,19 @@ package de.intelllinet.csvprint;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import de.intelllinet.csvprint.formatter.Formatter;
 import de.intelllinet.csvprint.util.ColumnElement;
 
 public class FormattedCSVDokument<T> implements CSVDokument {
 
-	private String escape;
-	private String quote;
-	private String delimiter;
 	private List<String> header;
 	private List<T> content;
 	private List<ColumnElement<T>> functions;
+
+	private String escape;
+	private String quote;
+	private String delimiter;
 
 	public static class Builder<T> {
 		// Required parameters
@@ -93,17 +92,25 @@ public class FormattedCSVDokument<T> implements CSVDokument {
 	}
 
 	private String buildCell(T bean, ColumnElement<T> element) {
-		Formatter formatter = element.getFormatter();
-		Function<T, Object> function = element.getFunction();
-		String foramtedCell = formatCell(bean, formatter, function);
-		return addQuotes(foramtedCell);
+		return extractCellContent(bean, element);
 	}
 
-	private String formatCell(T bean, Formatter formatter, Function<T, Object> function) {
-		if (formatter == null) {
-			return function.apply(bean).toString();
+	private String extractCellContent(T bean, ColumnElement<T> element) {
+		Object extractedContent = extractContentByFunction(bean, element);
+		String foramttedContent = formattContentByFormatter(extractedContent, element);
+		return addQuotes(foramttedContent);
+	}
+
+	private Object extractContentByFunction(T bean, ColumnElement<T> element) {
+		return element.getFunction().apply(bean);
+	}
+
+	private String formattContentByFormatter(Object content, ColumnElement<T> element) {
+		if (element.hasFormatter()) {
+			return element.getFormatter().format(content);
 		}
-		return formatter.format(function.apply(bean));
+
+		return content.toString();
 	}
 
 	private String addQuotes(Object fieldContent) {
