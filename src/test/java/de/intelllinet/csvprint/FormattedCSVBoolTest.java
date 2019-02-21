@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import de.csvprint.documents.CSVDokument;
@@ -13,43 +12,93 @@ import de.csvprint.documents.ColumnElement;
 import de.csvprint.documents.FormattedCSVDokument;
 import de.csvprint.formatter.BooleanFormatter;
 import de.csvprint.utils.BoolPattern;
-import de.intelllinet.csvprint.mock.models.BoolAnswer;
 
 public class FormattedCSVBoolTest {
 
-	private static List<BoolAnswer> answers;
-	private static List<String> answerHeader;
-	private static List<ColumnElement<BoolAnswer>> answerFunctions;
+	@Test
+	public void testPrintBoolsPatternYesNo() throws Exception {
+		List<String> header = new ArrayList<>();
+		header.add("Is full Aged");
 
-	@BeforeAll
-	static void setUpBeforeClass() throws Exception {
+		List<Boolean> contentList = new ArrayList<>();
+		contentList.add(true);
+		contentList.add(false);
 
-		answerHeader = new ArrayList<>();
-		answerHeader.add("Is full Aged");
-		answerHeader.add("Is a child");
-		answerHeader.add("Is living");
-		answerHeader.add("Is working");
+		List<ColumnElement<Boolean>> functions = new ArrayList<>();
+		functions.add(new ColumnElement<>(x -> x, new BooleanFormatter(BoolPattern.YES_NO)));
 
-		answers = new ArrayList<>();
-		answers.add(new BoolAnswer(true, true, false, true));
-		answers.add(new BoolAnswer(false, false, true, false));
+		CSVDokument dokument = new FormattedCSVDokument.Builder<>(header, contentList, functions).build();
+		String content = new String(dokument.print());
 
-		answerFunctions = new ArrayList<>();
-		answerFunctions.add(new ColumnElement<>(BoolAnswer::isFullAged, new BooleanFormatter(BoolPattern.YES_NO)));
-		answerFunctions.add(new ColumnElement<>(BoolAnswer::isChild, new BooleanFormatter(BoolPattern.BOOL_1_0)));
-		answerFunctions.add(new ColumnElement<>(BoolAnswer::isLiving, new BooleanFormatter(BoolPattern.TRUE_FALSE)));
-		answerFunctions.add(new ColumnElement<>(BoolAnswer::isWorking, null));
+		String expectedContent = "Is full Aged\n" //
+				+ "yes\n" //
+				+ "no";
+
+		assertEquals(expectedContent, content);
 	}
 
 	@Test
-	public void testPrintAnswersSuccessfully() throws Exception {
-		CSVDokument dokument = new FormattedCSVDokument.Builder<>(answerHeader, answers, answerFunctions).build();
+	public void testPrintBoolsPatternOneZero() throws Exception {
+		List<String> header = new ArrayList<>();
+		header.add("Is full Aged");
 
+		List<Boolean> contentList = new ArrayList<>();
+		contentList.add(true);
+		contentList.add(false);
+
+		List<ColumnElement<Boolean>> functions = new ArrayList<>();
+		functions.add(new ColumnElement<>(x -> x, new BooleanFormatter(BoolPattern.BOOL_1_0)));
+
+		CSVDokument dokument = new FormattedCSVDokument.Builder<>(header, contentList, functions).build();
 		String content = new String(dokument.print());
 
-		String expectedContent = "Is full Aged;Is a child;Is living;Is working\n" //
-				+ "yes;1;false;true\n" //
-				+ "no;0;true;false";
+		String expectedContent = "Is full Aged\n" //
+				+ "1\n" //
+				+ "0";
+
+		assertEquals(expectedContent, content);
+	}
+
+	@Test
+	public void testPrintBoolsPatternTrueFalse() throws Exception {
+		List<String> header = new ArrayList<>();
+		header.add("Is full Aged");
+
+		List<Boolean> contentList = new ArrayList<>();
+		contentList.add(true);
+		contentList.add(false);
+
+		List<ColumnElement<Boolean>> functions = new ArrayList<>();
+		functions.add(new ColumnElement<>(x -> x, new BooleanFormatter(BoolPattern.TRUE_FALSE)));
+
+		CSVDokument dokument = new FormattedCSVDokument.Builder<>(header, contentList, functions).build();
+		String content = new String(dokument.print());
+
+		String expectedContent = "Is full Aged\n" //
+				+ "true\n" //
+				+ "false";
+
+		assertEquals(expectedContent, content);
+	}
+
+	@Test
+	public void testPrintBoolsPatternStandard() throws Exception {
+		List<String> header = new ArrayList<>();
+		header.add("Is full Aged");
+
+		List<Boolean> contentList = new ArrayList<>();
+		contentList.add(true);
+		contentList.add(false);
+
+		List<ColumnElement<Boolean>> functions = new ArrayList<>();
+		functions.add(new ColumnElement<>(x -> x, null));
+
+		CSVDokument dokument = new FormattedCSVDokument.Builder<>(header, contentList, functions).build();
+		String content = new String(dokument.print());
+
+		String expectedContent = "Is full Aged\n" //
+				+ "true\n" //
+				+ "false";
 
 		assertEquals(expectedContent, content);
 	}
