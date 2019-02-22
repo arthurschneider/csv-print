@@ -2,6 +2,8 @@ package de.csvprint.documents;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.StringJoiner;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class FormattedCSVDokument<T> implements CSVDokument {
@@ -10,7 +12,7 @@ public class FormattedCSVDokument<T> implements CSVDokument {
 	private List<T> content;
 	private List<ColumnElement<T>> functions;
 
-	private String escape;
+	private String lineBreak;
 	private String quote;
 	private String delimiter;
 
@@ -21,7 +23,7 @@ public class FormattedCSVDokument<T> implements CSVDokument {
 		List<ColumnElement<T>> functions;
 
 		// Optional
-		private String escape = "\n";
+		private String lineBreak = "\n";
 		private String delimiter = ";";
 		private String quote = "";
 
@@ -41,8 +43,8 @@ public class FormattedCSVDokument<T> implements CSVDokument {
 			return this;
 		}
 
-		public Builder<T> escape(String escape) {
-			this.escape = escape;
+		public Builder<T> lineBreak(String lineBreak) {
+			this.lineBreak = lineBreak;
 			return this;
 		}
 
@@ -55,48 +57,41 @@ public class FormattedCSVDokument<T> implements CSVDokument {
 		this.header = builder.header;
 		this.content = builder.content;
 		this.functions = builder.functions;
-		this.escape = builder.escape;
+		this.lineBreak = builder.lineBreak;
 		this.delimiter = builder.delimiter;
 		this.quote = builder.quote;
 	}
 
 	@Override
 	public byte[] print() {
-		StringBuilder sb = new StringBuilder();
-
-		sb.append(buildHeader());
-
-		if (validArguments()) {
-			sb.append(buildContent());
-		}
-
-		return sb.toString().getBytes();
-	}
-
-	private boolean validArguments() {
-		return !content.isEmpty() && !functions.isEmpty();
+		return new StringJoiner(lineBreak) //
+				.add(buildHeader()) //
+				.add(buildContent()) //
+				.toString() //
+				.getBytes();
 	}
 
 	public String buildHeader() {
-		return header.stream().collect(Collectors.joining(delimiter)) + escape;
+		return header.stream().collect(Collectors.joining(delimiter));
 	}
 
 	private String buildContent() {
-		return content.stream().map(this::buildLine).collect(Collectors.joining(escape));
+		Predicate<String> notEmptyLines = line -> !line.isEmpty();
+		return content.stream().map(this::buildLine).filter(notEmptyLines).collect(Collectors.joining(lineBreak));
 	}
 
 	private String buildLine(T bean) {
-		return (functions.stream().map(f -> buildCell(bean, f)).collect(Collectors.joining(delimiter)));
+		return (functions.stream().map(function -> buildCell(bean, function)).collect(Collectors.joining(delimiter)));
 	}
 
 	private String buildCell(T bean, ColumnElement<T> element) {
-		return extractCellContent(bean, element);
+		String extractCellContent = extractCellContent(bean, element);
+		return addQuotes(extractCellContent);
 	}
 
 	private String extractCellContent(T bean, ColumnElement<T> element) {
 		Object extractedContent = extractContentByFunction(bean, element);
-		String foramttedContent = formattContentByFormatter(extractedContent, element);
-		return addQuotes(foramttedContent);
+		return formattContentByFormatter(extractedContent, element);
 	}
 
 	private Object extractContentByFunction(T bean, ColumnElement<T> element) {
@@ -111,7 +106,7 @@ public class FormattedCSVDokument<T> implements CSVDokument {
 		return content.toString();
 	}
 
-	private String addQuotes(Object fieldContent) {
-		return quote + fieldContent.toString() + quote;
+	private String addQuotes(String fieldContent) {
+		return quote + fieldContent + quote;
 	}
 }
