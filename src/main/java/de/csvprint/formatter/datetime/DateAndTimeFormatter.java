@@ -1,10 +1,10 @@
-package de.csvprint.formatter;
+package de.csvprint.formatter.datetime;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
+
+import de.csvprint.formatter.Formatter;
 
 public class DateAndTimeFormatter implements Formatter {
 
@@ -16,18 +16,14 @@ public class DateAndTimeFormatter implements Formatter {
 
 	@Override
 	public String format(Object object) {
-		if (object == null) {
-			return "";
-		}
 
 		if (object instanceof Date) {
-			return new SimpleDateFormat(pattern).format(object);
+			return new DateFormatter(pattern).format(object);
 		} else if (object instanceof LocalDate) {
-			return ((LocalDate) object).format(DateTimeFormatter.ofPattern(pattern));
+			return new LocalDateFormatter(pattern).format(object);
 		} else if (object instanceof LocalDateTime) {
-			return ((LocalDateTime) object).format(DateTimeFormatter.ofPattern(pattern));
+			return new LocalDateTimeFormatter(pattern).format(object);
 		}
-
 		return object.toString();
 	}
 

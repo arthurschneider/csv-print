@@ -1,6 +1,6 @@
 package de.csvprint.documents;
 
-public interface CSVDokument {
+public interface DocumentPrinter {
 
 	byte[] print();
 }

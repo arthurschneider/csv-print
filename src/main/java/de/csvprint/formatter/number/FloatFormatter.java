@@ -1,9 +1,11 @@
-package de.csvprint.formatter;
+package de.csvprint.formatter.number;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.util.Locale;
+
+import de.csvprint.formatter.Formatter;
 
 public class FloatFormatter implements Formatter {
 

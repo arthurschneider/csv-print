@@ -4,17 +4,17 @@ import java.util.function.Function;
 
 import de.csvprint.formatter.Formatter;
 
-public class ColumnElement<T> {
+public class Column<T> {
 
 	private Function<T, Object> function;
 	private Formatter formatter;
 
-	public ColumnElement(Function<T, Object> function) {
+	public Column(Function<T, Object> function) {
 		this.function = function;
 		this.formatter = null;
 	}
 
-	public ColumnElement(Function<T, Object> function, Formatter formatter) {
+	public Column(Function<T, Object> function, Formatter formatter) {
 		this.function = function;
 		this.formatter = formatter;
 	}

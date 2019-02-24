@@ -6,28 +6,28 @@ import java.util.StringJoiner;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-public class FormattedCSVDokument<T> implements CSVDokument {
+public class CsvDocumentPrinter<T> implements DocumentPrinter {
 
-	private List<String> header;
 	private List<T> content;
-	private List<ColumnElement<T>> functions;
+	private List<String> header;
+	private List<Column<T>> functions;
 
-	private String lineBreak;
 	private String quote;
 	private String delimiter;
+	private String lineBreak;
 
 	public static class Builder<T> {
 		// Required parameters
-		List<String> header;
 		List<T> content;
-		List<ColumnElement<T>> functions;
+		List<String> header;
+		List<Column<T>> functions;
 
-		// Optional
-		private String lineBreak = "\n";
-		private String delimiter = ";";
+		// Optional parameters
 		private String quote = "";
+		private String delimiter = ";";
+		private String lineBreak = "\n";
 
-		public Builder(List<String> header, List<T> content, List<ColumnElement<T>> functions) {
+		public Builder(List<String> header, List<T> content, List<Column<T>> functions) {
 			this.header = Objects.requireNonNull(header);
 			this.content = Objects.requireNonNull(content);
 			this.functions = Objects.requireNonNull(functions);
@@ -48,18 +48,19 @@ public class FormattedCSVDokument<T> implements CSVDokument {
 			return this;
 		}
 
-		public FormattedCSVDokument<T> build() {
-			return new FormattedCSVDokument<>(this);
+		public CsvDocumentPrinter<T> build() {
+			return new CsvDocumentPrinter<>(this);
 		}
 	}
 
-	private FormattedCSVDokument(Builder<T> builder) {
+	private CsvDocumentPrinter(Builder<T> builder) {
 		this.header = builder.header;
 		this.content = builder.content;
 		this.functions = builder.functions;
-		this.lineBreak = builder.lineBreak;
-		this.delimiter = builder.delimiter;
+
 		this.quote = builder.quote;
+		this.delimiter = builder.delimiter;
+		this.lineBreak = builder.lineBreak;
 	}
 
 	@Override
@@ -84,21 +85,25 @@ public class FormattedCSVDokument<T> implements CSVDokument {
 		return (functions.stream().map(function -> buildCell(bean, function)).collect(Collectors.joining(delimiter)));
 	}
 
-	private String buildCell(T bean, ColumnElement<T> element) {
+	private String buildCell(T bean, Column<T> element) {
 		String extractCellContent = extractCellContent(bean, element);
 		return addQuotes(extractCellContent);
 	}
 
-	private String extractCellContent(T bean, ColumnElement<T> element) {
+	private String extractCellContent(T bean, Column<T> element) {
 		Object extractedContent = extractContentByFunction(bean, element);
 		return formattContentByFormatter(extractedContent, element);
 	}
 
-	private Object extractContentByFunction(T bean, ColumnElement<T> element) {
+	private Object extractContentByFunction(T bean, Column<T> element) {
 		return element.getFunction().apply(bean);
 	}
 
-	private String formattContentByFormatter(Object content, ColumnElement<T> element) {
+	private String formattContentByFormatter(Object content, Column<T> element) {
+		if (content == null) {
+			return "";
+		}
+
 		if (element.hasFormatter()) {
 			return element.getFormatter().format(content);
 		}
