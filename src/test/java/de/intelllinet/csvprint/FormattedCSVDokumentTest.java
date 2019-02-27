@@ -11,9 +11,10 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import de.csvprint.documents.Column;
-import de.csvprint.documents.CsvDocumentPrinter;
-import de.csvprint.documents.DocumentPrinter;
+import de.csvprint.document.CsvBuilder;
+import de.csvprint.document.CsvPrinterFactory;
+import de.csvprint.document.Column;
+import de.csvprint.document.CsvPrinter;
 import de.csvprint.formatter.bool.BooleanYesNoFormatter;
 import de.csvprint.formatter.datetime.LocalDateFormatter;
 import de.csvprint.formatter.number.FloatFormatter;
@@ -51,27 +52,27 @@ public class FormattedCSVDokumentTest {
 	@Test
 	public void testBuilderWithoutHeader() throws Exception {
 		assertThrows(NullPointerException.class, () -> {
-			new CsvDocumentPrinter.Builder<>(null, content, functions);
+			CsvPrinterFactory.getInstance(new CsvBuilder<>(null, content, functions));
 		});
 	}
 
 	@Test
 	public void testBuilderWithoutContent() throws Exception {
 		assertThrows(NullPointerException.class, () -> {
-			new CsvDocumentPrinter.Builder<>(header, null, functions);
+			CsvPrinterFactory.getInstance(new CsvBuilder<>(header, null, functions));
 		});
 	}
 
 	@Test
 	public void testBuilderWithoutFuntions() throws Exception {
 		assertThrows(NullPointerException.class, () -> {
-			new CsvDocumentPrinter.Builder<>(header, content, null);
+			CsvPrinterFactory.getInstance(new CsvBuilder<>(header, content, null));
 		});
 	}
 
 	@Test
 	public void testPrintWithEmpyContent() throws Exception {
-		DocumentPrinter dokument = new CsvDocumentPrinter.Builder<>(header, emptyList(), functions).build();
+		CsvPrinter dokument = CsvPrinterFactory.getInstance(new CsvBuilder<>(header, emptyList(), functions));
 
 		String content = new String(dokument.print());
 
@@ -82,7 +83,8 @@ public class FormattedCSVDokumentTest {
 
 	@Test
 	public void testPrintWithEmpyFuntions() throws Exception {
-		DocumentPrinter dokument = new CsvDocumentPrinter.Builder<>(header, content, emptyList()).build();
+
+		CsvPrinter dokument = CsvPrinterFactory.getInstance(new CsvBuilder<>(header, content, emptyList()));
 
 		String content = new String(dokument.print());
 
@@ -93,7 +95,8 @@ public class FormattedCSVDokumentTest {
 
 	@Test
 	public void testPrintPeopleSuccessfully() throws Exception {
-		DocumentPrinter dokument = new CsvDocumentPrinter.Builder<>(header, content, functions).build();
+
+		CsvPrinter dokument = CsvPrinterFactory.getInstance(new CsvBuilder<>(header, content, functions));
 
 		String content = new String(dokument.print());
 
@@ -106,7 +109,9 @@ public class FormattedCSVDokumentTest {
 
 	@Test
 	public void testPrintPeopleSuccessfullyWithCustomDelimiter() throws Exception {
-		DocumentPrinter dokument = new CsvDocumentPrinter.Builder<>(header, content, functions).delimiter(":").build();
+
+		CsvPrinter dokument = CsvPrinterFactory
+				.getInstance(new CsvBuilder<>(header, content, functions).delimiter(":"));
 
 		String content = new String(dokument.print());
 
@@ -119,7 +124,9 @@ public class FormattedCSVDokumentTest {
 
 	@Test
 	public void testPrintPeopleSuccessfullyWithCustomQuotes() throws Exception {
-		DocumentPrinter dokument = new CsvDocumentPrinter.Builder<>(header, content, functions).quote("\"").build();
+
+		CsvPrinter dokument = CsvPrinterFactory
+				.getInstance(new CsvBuilder<>(header, content, functions).quote("\""));
 
 		String content = new String(dokument.print());
 
@@ -132,8 +139,9 @@ public class FormattedCSVDokumentTest {
 
 	@Test
 	public void testPrintPeopleSuccessfullyWithCustomLineBreaks() throws Exception {
-		DocumentPrinter dokument = new CsvDocumentPrinter.Builder<>(header, content, functions).lineBreak("\r\n")
-				.build();
+
+		CsvPrinter dokument = CsvPrinterFactory
+				.getInstance(new CsvBuilder<>(header, content, functions).lineBreak("\r\n"));
 
 		String content = new String(dokument.print());
 
@@ -150,7 +158,8 @@ public class FormattedCSVDokumentTest {
 		content.add(new Person(18, "Maik", "Muster", false, null, 120.21));
 		content.add(new Person(38, null, "Schuster", true, LocalDate.of(1981, 1, 15), 3010.45));
 
-		DocumentPrinter doc = new CsvDocumentPrinter.Builder<>(header, content, functions).lineBreak("\r\n").build();
+		CsvPrinter doc = CsvPrinterFactory
+				.getInstance(new CsvBuilder<>(header, content, functions).lineBreak("\r\n"));
 
 		String content = new String(doc.print());
 
@@ -167,7 +176,8 @@ public class FormattedCSVDokumentTest {
 		content.add(new Person(18, "Maik", "Muster", false, LocalDate.of(2001, 1, 12), 120.21));
 		content.add(null);
 
-		DocumentPrinter doc = new CsvDocumentPrinter.Builder<>(header, content, functions).lineBreak("\r\n").build();
+		CsvPrinter doc = CsvPrinterFactory
+				.getInstance(new CsvBuilder<>(header, content, functions).lineBreak("\r\n"));
 
 		assertThrows(NullPointerException.class, () -> {
 			doc.print();

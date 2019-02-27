@@ -8,7 +8,7 @@ import de.csvprint.formatter.Formatter;
 
 public class DateAndTimeFormatter implements Formatter {
 
-	private String pattern;
+	private final String pattern;
 
 	public DateAndTimeFormatter(String pattern) {
 		this.pattern = pattern;

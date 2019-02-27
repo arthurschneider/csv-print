@@ -11,9 +11,10 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import de.csvprint.documents.Column;
-import de.csvprint.documents.CsvDocumentPrinter;
-import de.csvprint.documents.DocumentPrinter;
+import de.csvprint.document.CsvBuilder;
+import de.csvprint.document.CsvPrinterFactory;
+import de.csvprint.document.Column;
+import de.csvprint.document.CsvPrinter;
 import de.csvprint.formatter.datetime.DateAndTimeFormatter;
 import de.csvprint.formatter.datetime.DateFormatter;
 import de.csvprint.formatter.datetime.LocalDateFormatter;
@@ -27,7 +28,7 @@ public class DateTimeFormatterTest {
 		List<Date> content = Arrays.asList(new Date());
 		List<Column<Date>> functions = Arrays.asList(new Column<>(x -> x, new DateFormatter("dd.MM.yyyy")));
 
-		DocumentPrinter dokument = new CsvDocumentPrinter.Builder<>(header, content, functions).build();
+		CsvPrinter dokument = CsvPrinterFactory.getInstance(new CsvBuilder<>(header, content, functions));
 		String actualContent = new String(dokument.print());
 
 		String dateNow = LocalDate.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
@@ -43,7 +44,7 @@ public class DateTimeFormatterTest {
 		List<LocalDate> content = Arrays.asList(LocalDate.now());
 		List<Column<LocalDate>> functions = Arrays.asList(new Column<>(x -> x, new LocalDateFormatter("dd.MM.yyyy")));
 
-		DocumentPrinter dokument = new CsvDocumentPrinter.Builder<>(header, content, functions).build();
+		CsvPrinter dokument = CsvPrinterFactory.getInstance(new CsvBuilder<>(header, content, functions));
 		String actualContent = new String(dokument.print());
 
 		String dateNow = LocalDate.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
@@ -60,7 +61,7 @@ public class DateTimeFormatterTest {
 		List<Column<LocalDateTime>> functions = Arrays
 				.asList(new Column<>(x -> x, new LocalDateTimeFormatter("dd.MM.yyyy")));
 
-		DocumentPrinter dokument = new CsvDocumentPrinter.Builder<>(header, content, functions).build();
+		CsvPrinter dokument = CsvPrinterFactory.getInstance(new CsvBuilder<>(header, content, functions));
 		String actualContent = new String(dokument.print());
 
 		String dateNow = LocalDate.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
@@ -77,7 +78,7 @@ public class DateTimeFormatterTest {
 		List<Column<LocalDateTime>> functions = Arrays
 				.asList(new Column<>(x -> x, new DateAndTimeFormatter("dd.MM.yyyy")));
 
-		DocumentPrinter dokument = new CsvDocumentPrinter.Builder<>(header, content, functions).build();
+		CsvPrinter dokument = CsvPrinterFactory.getInstance(new CsvBuilder<>(header, content, functions));
 		String actualContent = new String(dokument.print());
 
 		String dateNow = LocalDate.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
@@ -93,7 +94,7 @@ public class DateTimeFormatterTest {
 		List<Date> content = Arrays.asList(new Date());
 		List<Column<Date>> functions = Arrays.asList(new Column<>(x -> x));
 
-		DocumentPrinter dokument = new CsvDocumentPrinter.Builder<>(header, content, functions).build();
+		CsvPrinter dokument = CsvPrinterFactory.getInstance(new CsvBuilder<>(header, content, functions));
 		String actualContent = new String(dokument.print());
 
 		String expectedContent = "Birthday\n" //
@@ -108,7 +109,7 @@ public class DateTimeFormatterTest {
 		List<LocalDate> content = Arrays.asList(LocalDate.now());
 		List<Column<LocalDate>> functions = Arrays.asList(new Column<>(x -> x));
 
-		DocumentPrinter dokument = new CsvDocumentPrinter.Builder<>(header, content, functions).build();
+		CsvPrinter dokument = CsvPrinterFactory.getInstance(new CsvBuilder<>(header, content, functions));
 		String actualContent = new String(dokument.print());
 
 		String expectedContent = "Birthday\n" //
@@ -125,7 +126,7 @@ public class DateTimeFormatterTest {
 		List<LocalDateTime> content = Arrays.asList(now);
 		List<Column<LocalDateTime>> functions = Arrays.asList(new Column<>(x -> x));
 
-		DocumentPrinter dokument = new CsvDocumentPrinter.Builder<>(header, content, functions).build();
+		CsvPrinter dokument = CsvPrinterFactory.getInstance(new CsvBuilder<>(header, content, functions));
 		String actualContent = new String(dokument.print());
 
 		String expectedContent = "Birthday\n" //

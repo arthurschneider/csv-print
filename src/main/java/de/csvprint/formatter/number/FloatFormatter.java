@@ -9,17 +9,18 @@ import de.csvprint.formatter.Formatter;
 
 public class FloatFormatter implements Formatter {
 
-	private Locale locale;
-	private String pattern;
+	private static final String STANDARD_PATTERN = "#0.00";
+	private final Locale locale;
+	private final String pattern;
 
 	public FloatFormatter() {
 		this.locale = Locale.GERMANY;
-		this.pattern = "#0.00";
+		this.pattern = STANDARD_PATTERN;
 	}
 
 	public FloatFormatter(Locale locale) {
 		this.locale = locale;
-		this.pattern = "#0.00";
+		this.pattern = STANDARD_PATTERN;
 	}
 
 	public FloatFormatter(String pattern) {

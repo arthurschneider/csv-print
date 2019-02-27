@@ -8,9 +8,10 @@ import java.util.Locale;
 
 import org.junit.jupiter.api.Test;
 
-import de.csvprint.documents.DocumentPrinter;
-import de.csvprint.documents.Column;
-import de.csvprint.documents.CsvDocumentPrinter;
+import de.csvprint.document.CsvBuilder;
+import de.csvprint.document.CsvPrinterFactory;
+import de.csvprint.document.Column;
+import de.csvprint.document.CsvPrinter;
 import de.csvprint.formatter.number.FloatFormatter;
 
 public class FloatFormatterTest {
@@ -28,7 +29,7 @@ public class FloatFormatterTest {
 		List<Column<Double>> functions = new ArrayList<>();
 		functions.add(new Column<>(x -> x, new FloatFormatter()));
 
-		DocumentPrinter dokument = new CsvDocumentPrinter.Builder<>(header, contentList, functions).build();
+		CsvPrinter dokument = CsvPrinterFactory.getInstance(new CsvBuilder<>(header, contentList, functions));
 		String content = new String(dokument.print());
 
 		String expectedContent = "Sales 2019\n" //
@@ -52,7 +53,7 @@ public class FloatFormatterTest {
 		List<Column<Double>> functions = new ArrayList<>();
 		functions.add(new Column<>(x -> x, new FloatFormatter(Locale.US)));
 
-		DocumentPrinter dokument = new CsvDocumentPrinter.Builder<>(header, contentList, functions).build();
+		CsvPrinter dokument = CsvPrinterFactory.getInstance(new CsvBuilder<>(header, contentList, functions));
 		String content = new String(dokument.print());
 
 		String expectedContent = "Sales 2019\n" //
@@ -76,7 +77,7 @@ public class FloatFormatterTest {
 		List<Column<Double>> functions = new ArrayList<>();
 		functions.add(new Column<>(x -> x, new FloatFormatter("#0.000")));
 
-		DocumentPrinter dokument = new CsvDocumentPrinter.Builder<>(header, contentList, functions).build();
+		CsvPrinter dokument = CsvPrinterFactory.getInstance(new CsvBuilder<>(header, contentList, functions));
 		String content = new String(dokument.print());
 
 		String expectedContent = "Sales 2019\n" //
@@ -100,7 +101,7 @@ public class FloatFormatterTest {
 		List<Column<Double>> functions = new ArrayList<>();
 		functions.add(new Column<>(x -> x, new FloatFormatter(Locale.US, "#0.000")));
 
-		DocumentPrinter dokument = new CsvDocumentPrinter.Builder<>(header, contentList, functions).build();
+		CsvPrinter dokument = CsvPrinterFactory.getInstance(new CsvBuilder<>(header, contentList, functions));
 		String content = new String(dokument.print());
 
 		String expectedContent = "Sales 2019\n" //
@@ -124,7 +125,7 @@ public class FloatFormatterTest {
 		List<Column<Double>> functions = new ArrayList<>();
 		functions.add(new Column<>(x -> x, new FloatFormatter(Locale.US, "#0.000")));
 
-		DocumentPrinter dokument = new CsvDocumentPrinter.Builder<>(header, contentList, functions).build();
+		CsvPrinter dokument = CsvPrinterFactory.getInstance(new CsvBuilder<>(header, contentList, functions));
 		String content = new String(dokument.print());
 
 		String expectedContent = "Sales 2019\n" //

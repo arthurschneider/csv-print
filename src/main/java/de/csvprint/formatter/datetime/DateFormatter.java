@@ -6,7 +6,7 @@ import de.csvprint.formatter.Formatter;
 
 public class DateFormatter implements Formatter {
 
-	private String pattern;
+	private final String pattern;
 
 	public DateFormatter(String pattern) {
 		this.pattern = pattern;
