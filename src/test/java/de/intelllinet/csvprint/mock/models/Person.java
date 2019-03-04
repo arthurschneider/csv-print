@@ -7,15 +7,15 @@ public class Person {
 	private int age;
 	private String firstname;
 	private String lastname;
-	private boolean hasCar;
+	private boolean married;
 	private LocalDate birthday;
 	private double income;
 
-	public Person(int age, String firstname, String lastname, boolean hasCar, LocalDate birthday, double income) {
+	public Person(int age, String firstname, String lastname, boolean married, LocalDate birthday, double income) {
 		this.age = age;
 		this.firstname = firstname;
 		this.lastname = lastname;
-		this.hasCar = hasCar;
+		this.married = married;
 		this.birthday = birthday;
 		this.income = income;
 	}
@@ -44,12 +44,12 @@ public class Person {
 		this.lastname = lastname;
 	}
 
-	public boolean isHasCar() {
-		return hasCar;
+	public boolean isMarried() {
+		return married;
 	}
 
-	public void setHasCar(boolean hasCar) {
-		this.hasCar = hasCar;
+	public void setMarried(boolean hasCar) {
+		this.married = hasCar;
 	}
 
 	public LocalDate getBirthday() {

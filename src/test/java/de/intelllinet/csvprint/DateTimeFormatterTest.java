@@ -9,12 +9,13 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import de.csvprint.document.CsvBuilder;
-import de.csvprint.document.CsvPrinterFactory;
 import de.csvprint.document.Column;
+import de.csvprint.document.CsvBuilder;
 import de.csvprint.document.CsvPrinter;
+import de.csvprint.document.CsvPrinterFactory;
 import de.csvprint.formatter.datetime.DateAndTimeFormatter;
 import de.csvprint.formatter.datetime.DateFormatter;
 import de.csvprint.formatter.datetime.LocalDateFormatter;
@@ -23,6 +24,7 @@ import de.csvprint.formatter.datetime.LocalDateTimeFormatter;
 public class DateTimeFormatterTest {
 
 	@Test
+	@DisplayName("Printer with a custom DateFormatter should print Date in specified format")
 	public void testPrintDate() throws Exception {
 		List<String> header = Arrays.asList("Birthday");
 		List<Date> content = Arrays.asList(new Date());
@@ -39,6 +41,7 @@ public class DateTimeFormatterTest {
 	}
 
 	@Test
+	@DisplayName("Printer with a custom LocalDateFormatter should print LocalDate in specified format")
 	public void testPrintLocalDate() throws Exception {
 		List<String> header = Arrays.asList("Birthday");
 		List<LocalDate> content = Arrays.asList(LocalDate.now());
@@ -55,6 +58,7 @@ public class DateTimeFormatterTest {
 	}
 
 	@Test
+	@DisplayName("Printer with a custom LocalDateTimeFormatter should print LocalDateTime in specified format")
 	public void testPrintLocalDateTime() throws Exception {
 		List<String> header = Arrays.asList("Birthday");
 		List<LocalDateTime> content = Arrays.asList(LocalDateTime.now());
@@ -72,6 +76,7 @@ public class DateTimeFormatterTest {
 	}
 
 	@Test
+	@DisplayName("Printer with a custom DateAndTimeFormatter should print any date object in specified format")
 	public void testPrintLocalDateAndTime() throws Exception {
 		List<String> header = Arrays.asList("Birthday");
 		List<LocalDateTime> content = Arrays.asList(LocalDateTime.now());
@@ -89,6 +94,7 @@ public class DateTimeFormatterTest {
 	}
 
 	@Test
+	@DisplayName("Printer without a formatter should print Date as a simple String")
 	public void testPrintDateWithoutFormatter() throws Exception {
 		List<String> header = Arrays.asList("Birthday");
 		List<Date> content = Arrays.asList(new Date());
@@ -98,12 +104,13 @@ public class DateTimeFormatterTest {
 		String actualContent = new String(dokument.print());
 
 		String expectedContent = "Birthday\n" //
-				+ new Date();
+				+ new Date().toString();
 
 		assertEquals(expectedContent, actualContent);
 	}
 
 	@Test
+	@DisplayName("Printer without a formatter should print LocalDate as a simple String")
 	public void testPrintLocalDateWithoutFormatter() throws Exception {
 		List<String> header = Arrays.asList("Birthday");
 		List<LocalDate> content = Arrays.asList(LocalDate.now());
@@ -113,12 +120,13 @@ public class DateTimeFormatterTest {
 		String actualContent = new String(dokument.print());
 
 		String expectedContent = "Birthday\n" //
-				+ LocalDate.now();
+				+ LocalDate.now().toString();
 
 		assertEquals(expectedContent, actualContent);
 	}
 
 	@Test
+	@DisplayName("Printer without a formatter should print LocalDateTime as a simple String")
 	public void testPrintLocalDateTimeWithoutFormatter() throws Exception {
 		LocalDateTime now = LocalDateTime.now();
 
@@ -130,7 +138,7 @@ public class DateTimeFormatterTest {
 		String actualContent = new String(dokument.print());
 
 		String expectedContent = "Birthday\n" //
-				+ now;
+				+ now.toString();
 
 		assertEquals(expectedContent, actualContent);
 	}
