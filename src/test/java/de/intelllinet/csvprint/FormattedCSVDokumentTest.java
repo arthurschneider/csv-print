@@ -10,6 +10,7 @@ import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import de.csvprint.document.Column;
@@ -21,6 +22,7 @@ import de.csvprint.formatter.datetime.LocalDateFormatter;
 import de.csvprint.formatter.number.FloatFormatter;
 import de.intelllinet.csvprint.mock.models.Person;
 
+@DisplayName("When testing the CsvPrinter with")
 public class FormattedCSVDokumentTest {
 
 	private static List<String> header;
@@ -50,129 +52,141 @@ public class FormattedCSVDokumentTest {
 		functions.add(new Column<>(Person::getIncome, new FloatFormatter()));
 	}
 
-	@Test
-	@DisplayName("Printer with a null header list should throw a NullPointerException")
-	public void testBuilderWithoutHeader() throws Exception {
-		assertThrows(NullPointerException.class, () -> new CsvBuilder<>(null, content, functions));
+	@Nested
+	@DisplayName("a Builder that has")
+	public class NullValueBuilder {
+
+		@Test
+		@DisplayName("a null header list, than it should throw a NullPointerException")
+		public void testBuilderWithoutHeader() throws Exception {
+			assertThrows(NullPointerException.class, () -> new CsvBuilder<>(null, content, functions));
+		}
+
+		@Test
+		@DisplayName("a null content list, than it should throw a NullPointerException")
+		public void testBuilderWithoutContent() throws Exception {
+			assertThrows(NullPointerException.class, () -> new CsvBuilder<>(header, null, functions));
+		}
+
+		@Test
+		@DisplayName("a null function list, than it should throw a NullPointerException")
+		public void testBuilderWithoutFuntions() throws Exception {
+			assertThrows(NullPointerException.class, () -> new CsvBuilder<>(header, content, null));
+		}
 	}
 
-	@Test
-	@DisplayName("Printer with a null content list should throw a NullPointerException")
-	public void testBuilderWithoutContent() throws Exception {
-		assertThrows(NullPointerException.class, () -> new CsvBuilder<>(header, null, functions));
-	}
+	@Nested
+	@DisplayName("a Printer that has")
+	public class Printer {
 
-	@Test
-	@DisplayName("Printer where content list has null objects, should throw a NullPointerException")
-	public void testPrintPeopleWithNullBean() throws Exception {
-		content = new ArrayList<>();
-		content.add(new Person(18, "Maik", "Muster", false, LocalDate.of(2001, 1, 12), 120.21));
-		content.add(null);
+		@Test
+		@DisplayName(" a content list that contains null objects, than it should throw a NullPointerException")
+		public void testPrintPeopleWithNullBean() throws Exception {
+			content = new ArrayList<>();
+			content.add(new Person(18, "Maik", "Muster", false, LocalDate.of(2001, 1, 12), 120.21));
+			content.add(null);
 
-		CsvPrinter doc = CsvPrinterFactory.getInstance(new CsvBuilder<>(header, content, functions));
+			CsvPrinter doc = CsvPrinterFactory.getInstance(new CsvBuilder<>(header, content, functions));
 
-		assertThrows(NullPointerException.class, () -> doc.print());
-	}
+			assertThrows(NullPointerException.class, () -> doc.print());
+		}
 
-	@Test
-	@DisplayName("Printer with a null function list should throw a NullPointerException")
-	public void testBuilderWithoutFuntions() throws Exception {
-		assertThrows(NullPointerException.class, () -> new CsvBuilder<>(header, content, null));
-	}
+		@Test
+		@DisplayName("an empty content list, than it should only print the header")
+		public void testPrintWithEmpyContent() throws Exception {
+			CsvPrinter dokument = CsvPrinterFactory.getInstance(new CsvBuilder<>(header, emptyList(), functions));
+			String actualContent = new String(dokument.print());
 
-	@Test
-	@DisplayName("Printer with a empty content list should only print the header")
-	public void testPrintWithEmpyContent() throws Exception {
-		CsvPrinter dokument = CsvPrinterFactory.getInstance(new CsvBuilder<>(header, emptyList(), functions));
-		String actualContent = new String(dokument.print());
+			String expectedContent = "Age;Firstname;Lastname;Married ?;Birthday;Income in €\n";
 
-		String expectedContent = "Age;Firstname;Lastname;Married ?;Birthday;Income in €\n";
+			assertEquals(expectedContent, actualContent);
+		}
 
-		assertEquals(expectedContent, actualContent);
-	}
+		@Test
+		@DisplayName("an empty function list, than it should only print the header")
+		public void testPrintWithEmpyFuntions() throws Exception {
+			CsvPrinter dokument = CsvPrinterFactory.getInstance(new CsvBuilder<>(header, content, emptyList()));
+			String actualContent = new String(dokument.print());
 
-	@Test
-	@DisplayName("Printer with a empty function list should only print the header")
-	public void testPrintWithEmpyFuntions() throws Exception {
-		CsvPrinter dokument = CsvPrinterFactory.getInstance(new CsvBuilder<>(header, content, emptyList()));
-		String actualContent = new String(dokument.print());
+			String expectedContent = "Age;Firstname;Lastname;Married ?;Birthday;Income in €\n";
 
-		String expectedContent = "Age;Firstname;Lastname;Married ?;Birthday;Income in €\n";
+			assertEquals(expectedContent, actualContent);
+		}
 
-		assertEquals(expectedContent, actualContent);
-	}
+		@Test
+		@DisplayName("a correct parameter list, than it should print succesfully a CSV file")
+		public void testPrintPeopleSuccessfully() throws Exception {
+			CsvPrinter dokument = CsvPrinterFactory.getInstance(new CsvBuilder<>(header, content, functions));
 
-	@Test
-	@DisplayName("Printer with a correct parameters should print succesfully a CSV file")
-	public void testPrintPeopleSuccessfully() throws Exception {
-		CsvPrinter dokument = CsvPrinterFactory.getInstance(new CsvBuilder<>(header, content, functions));
+			String actualContent = new String(dokument.print());
 
-		String actualContent = new String(dokument.print());
+			String expectedContent = "Age;Firstname;Lastname;Married ?;Birthday;Income in €\n" //
+					+ "18;Maik;Muster;no;12.01.2001;120,21\n" //
+					+ "38;Lisa;Schuster;yes;15.01.1981;3010,45";
 
-		String expectedContent = "Age;Firstname;Lastname;Married ?;Birthday;Income in €\n" //
-				+ "18;Maik;Muster;no;12.01.2001;120,21\n" //
-				+ "38;Lisa;Schuster;yes;15.01.1981;3010,45";
+			assertEquals(expectedContent, actualContent);
+		}
 
-		assertEquals(expectedContent, actualContent);
-	}
+		@Test
+		@DisplayName("a correct parameter list and with a custom delimiter, than it should print succesfully a CSV file ")
+		public void testPrintPeopleSuccessfullyWithCustomDelimiter() throws Exception {
+			CsvPrinter dokument = CsvPrinterFactory
+					.getInstance(new CsvBuilder<>(header, content, functions).delimiter(":"));
 
-	@Test
-	@DisplayName("Printer with a correct parameters and with a custom delimiter should print succesfully a CSV file ")
-	public void testPrintPeopleSuccessfullyWithCustomDelimiter() throws Exception {
-		CsvPrinter dokument = CsvPrinterFactory
-				.getInstance(new CsvBuilder<>(header, content, functions).delimiter(":"));
+			String actualContent = new String(dokument.print());
 
-		String actualContent = new String(dokument.print());
+			String expectedContent = "Age:Firstname:Lastname:Married ?:Birthday:Income in €\n" //
+					+ "18:Maik:Muster:no:12.01.2001:120,21\n" //
+					+ "38:Lisa:Schuster:yes:15.01.1981:3010,45";
 
-		String expectedContent = "Age:Firstname:Lastname:Married ?:Birthday:Income in €\n" //
-				+ "18:Maik:Muster:no:12.01.2001:120,21\n" //
-				+ "38:Lisa:Schuster:yes:15.01.1981:3010,45";
+			assertEquals(expectedContent, actualContent);
+		}
 
-		assertEquals(expectedContent, actualContent);
-	}
+		@Test
+		@DisplayName("a correct parameters and with a custom quote, than it should print succesfully a CSV file ")
+		public void testPrintPeopleSuccessfullyWithCustomQuotes() throws Exception {
+			CsvPrinter dokument = CsvPrinterFactory
+					.getInstance(new CsvBuilder<>(header, content, functions).quote("\""));
+			String actualContent = new String(dokument.print());
 
-	@Test
-	@DisplayName("Printer with a correct parameters and with a custom quote should print succesfully a CSV file ")
-	public void testPrintPeopleSuccessfullyWithCustomQuotes() throws Exception {
-		CsvPrinter dokument = CsvPrinterFactory.getInstance(new CsvBuilder<>(header, content, functions).quote("\""));
-		String actualContent = new String(dokument.print());
+			String expectedContent = "Age;Firstname;Lastname;Married ?;Birthday;Income in €\n" //
+					+ "\"18\";\"Maik\";\"Muster\";\"no\";\"12.01.2001\";\"120,21\"\n" //
+					+ "\"38\";\"Lisa\";\"Schuster\";\"yes\";\"15.01.1981\";\"3010,45\"";
 
-		String expectedContent = "Age;Firstname;Lastname;Married ?;Birthday;Income in €\n" //
-				+ "\"18\";\"Maik\";\"Muster\";\"no\";\"12.01.2001\";\"120,21\"\n" //
-				+ "\"38\";\"Lisa\";\"Schuster\";\"yes\";\"15.01.1981\";\"3010,45\"";
+			assertEquals(expectedContent, actualContent);
+		}
 
-		assertEquals(expectedContent, actualContent);
-	}
+		@Test
+		@DisplayName("a correct parameters and with a custom line break, than it should print succesfully a CSV file ")
+		public void testPrintPeopleSuccessfullyWithCustomLineBreaks() throws Exception {
+			CsvPrinter dokument = CsvPrinterFactory
+					.getInstance(new CsvBuilder<>(header, content, functions).lineBreak("\r\n"));
+			String actualContent = new String(dokument.print());
 
-	@Test
-	@DisplayName("Printer with a correct parameters and with a custom line break should print succesfully a CSV file ")
-	public void testPrintPeopleSuccessfullyWithCustomLineBreaks() throws Exception {
-		CsvPrinter dokument = CsvPrinterFactory
-				.getInstance(new CsvBuilder<>(header, content, functions).lineBreak("\r\n"));
-		String actualContent = new String(dokument.print());
+			String expectedContent = "Age;Firstname;Lastname;Married ?;Birthday;Income in €\r\n" //
+					+ "18;Maik;Muster;no;12.01.2001;120,21\r\n" //
+					+ "38;Lisa;Schuster;yes;15.01.1981;3010,45";
 
-		String expectedContent = "Age;Firstname;Lastname;Married ?;Birthday;Income in €\r\n" //
-				+ "18;Maik;Muster;no;12.01.2001;120,21\r\n" //
-				+ "38;Lisa;Schuster;yes;15.01.1981;3010,45";
+			assertEquals(expectedContent, actualContent);
+		}
 
-		assertEquals(expectedContent, actualContent);
-	}
+		@Test
+		@DisplayName("a content list objects have null values,that it should print empty strings in CSV file")
+		public void testPrintPeopleWithNullValues() throws Exception {
+			content = new ArrayList<>();
+			content.add(new Person(18, "Maik", "Muster", false, null, 120.21));
+			content.add(new Person(38, null, "Schuster", true, LocalDate.of(1981, 1, 15), 3010.45));
 
-	@Test
-	@DisplayName("Printer where content list objects have null values, should print empty strings in CSV file")
-	public void testPrintPeopleWithNullValues() throws Exception {
-		content = new ArrayList<>();
-		content.add(new Person(18, "Maik", "Muster", false, null, 120.21));
-		content.add(new Person(38, null, "Schuster", true, LocalDate.of(1981, 1, 15), 3010.45));
+			CsvPrinter doc = CsvPrinterFactory.getInstance(new CsvBuilder<>(header, content, functions));
+			String actualContent = new String(doc.print());
 
-		CsvPrinter doc = CsvPrinterFactory.getInstance(new CsvBuilder<>(header, content, functions));
-		String actualContent = new String(doc.print());
+			String expectedContent = "Age;Firstname;Lastname;Married ?;Birthday;Income in €\n" //
+					+ "18;Maik;Muster;no;;120,21\n" //
+					+ "38;;Schuster;yes;15.01.1981;3010,45";
 
-		String expectedContent = "Age;Firstname;Lastname;Married ?;Birthday;Income in €\n" //
-				+ "18;Maik;Muster;no;;120,21\n" //
-				+ "38;;Schuster;yes;15.01.1981;3010,45";
+			assertEquals(expectedContent, actualContent);
+		}
 
-		assertEquals(expectedContent, actualContent);
 	}
 
 }

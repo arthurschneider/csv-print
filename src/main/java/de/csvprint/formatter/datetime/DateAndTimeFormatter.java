@@ -24,6 +24,7 @@ public class DateAndTimeFormatter implements Formatter {
 		} else if (object instanceof LocalDateTime) {
 			return new LocalDateTimeFormatter(pattern).format(object);
 		}
+
 		return object.toString();
 	}
 
