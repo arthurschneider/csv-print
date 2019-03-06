@@ -11,6 +11,7 @@ import java.util.List;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 
 import de.csvprint.document.Column;
@@ -23,6 +24,9 @@ import de.csvprint.formatter.datetime.LocalDateFormatter;
 import de.csvprint.formatter.datetime.LocalDateTimeFormatter;
 
 public class DateTimeFormatterTest {
+
+	private static final LocalDateTimeFormatter LOCAL_DATE_TIME_FORMATTER = new LocalDateTimeFormatter("dd.MM.yyyy");
+	private static final DateAndTimeFormatter DATEANDTIME_FORMATTER = new DateAndTimeFormatter("dd.MM.yyyy");
 
 	@Test
 	@DisplayName("Printer with a custom DateFormatter should print Date in specified format")
@@ -63,8 +67,7 @@ public class DateTimeFormatterTest {
 	public void testPrintLocalDateTime() throws Exception {
 		List<String> header = Arrays.asList("Birthday");
 		List<LocalDateTime> content = Arrays.asList(LocalDateTime.now());
-		List<Column<LocalDateTime>> functions = Arrays
-				.asList(new Column<>(x -> x, new LocalDateTimeFormatter("dd.MM.yyyy")));
+		List<Column<LocalDateTime>> functions = Arrays.asList(new Column<>(x -> x, LOCAL_DATE_TIME_FORMATTER));
 
 		CsvPrinter dokument = CsvPrinterFactory.getInstance(new CsvBuilder<>(header, content, functions));
 		String actualContent = new String(dokument.print());
@@ -109,6 +112,7 @@ public class DateTimeFormatterTest {
 	}
 
 	@Test
+	@RepeatedTest(3)
 	@DisplayName("Printer without a formatter should print LocalDateTime as a simple String")
 	public void testPrintLocalDateTimeWithoutFormatter() throws Exception {
 		LocalDateTime now = LocalDateTime.now();
@@ -131,12 +135,12 @@ public class DateTimeFormatterTest {
 	public class DateAndTime {
 
 		@Test
+		@RepeatedTest(3)
 		@DisplayName("should print LocalDateTime object in specified format")
 		public void testPrintLocalDateAndTimeWithLocalDateTime() throws Exception {
 			List<String> header = Arrays.asList("Birthday");
 			List<LocalDateTime> content = Arrays.asList(LocalDateTime.now());
-			List<Column<LocalDateTime>> functions = Arrays
-					.asList(new Column<>(x -> x, new DateAndTimeFormatter("dd.MM.yyyy")));
+			List<Column<LocalDateTime>> functions = Arrays.asList(new Column<>(x -> x, DATEANDTIME_FORMATTER));
 
 			CsvPrinter dokument = CsvPrinterFactory.getInstance(new CsvBuilder<>(header, content, functions));
 			String actualContent = new String(dokument.print());
@@ -152,7 +156,7 @@ public class DateTimeFormatterTest {
 		public void testPrintLocalDateAndTimeWithDate() throws Exception {
 			List<String> header = Arrays.asList("Birthday");
 			List<Date> content = Arrays.asList(new Date());
-			List<Column<Date>> functions = Arrays.asList(new Column<>(x -> x, new DateAndTimeFormatter("dd.MM.yyyy")));
+			List<Column<Date>> functions = Arrays.asList(new Column<>(x -> x, DATEANDTIME_FORMATTER));
 
 			CsvPrinter dokument = CsvPrinterFactory.getInstance(new CsvBuilder<>(header, content, functions));
 			String actualContent = new String(dokument.print());
@@ -168,8 +172,7 @@ public class DateTimeFormatterTest {
 		public void testPrintLocalDateAndTimeWithLocalDate() throws Exception {
 			List<String> header = Arrays.asList("Birthday");
 			List<LocalDate> content = Arrays.asList(LocalDate.now());
-			List<Column<LocalDate>> functions = Arrays
-					.asList(new Column<>(x -> x, new DateAndTimeFormatter("dd.MM.yyyy")));
+			List<Column<LocalDate>> functions = Arrays.asList(new Column<>(x -> x, DATEANDTIME_FORMATTER));
 
 			CsvPrinter dokument = CsvPrinterFactory.getInstance(new CsvBuilder<>(header, content, functions));
 			String actualContent = new String(dokument.print());

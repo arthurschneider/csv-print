@@ -36,7 +36,7 @@ class CsvDocumentPrinter<T> implements CsvPrinter {
 	}
 
 	private String buildHead() {
-		return header.stream().collect(joining(delimiter));
+		return header.stream().map(this::addQuotes).collect(joining(delimiter));
 	}
 
 	private String buildBody() {

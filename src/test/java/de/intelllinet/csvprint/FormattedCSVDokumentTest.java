@@ -149,7 +149,7 @@ public class FormattedCSVDokumentTest {
 					.getInstance(new CsvBuilder<>(header, content, functions).quote("\""));
 			String actualContent = new String(dokument.print());
 
-			String expectedContent = "Age;Firstname;Lastname;Married ?;Birthday;Income in €\n" //
+			String expectedContent = "\"Age\";\"Firstname\";\"Lastname\";\"Married ?\";\"Birthday\";\"Income in €\"\n" //
 					+ "\"18\";\"Maik\";\"Muster\";\"no\";\"12.01.2001\";\"120,21\"\n" //
 					+ "\"38\";\"Lisa\";\"Schuster\";\"yes\";\"15.01.1981\";\"3010,45\"";
 
