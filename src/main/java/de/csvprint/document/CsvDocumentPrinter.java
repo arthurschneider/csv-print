@@ -3,8 +3,8 @@ package de.csvprint.document;
 import static java.util.stream.Collectors.joining;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.StringJoiner;
-import java.util.function.Predicate;
 
 class CsvDocumentPrinter<T> implements CsvPrinter {
 
@@ -40,12 +40,11 @@ class CsvDocumentPrinter<T> implements CsvPrinter {
 	}
 
 	private String buildBody() {
-		Predicate<String> notEmptyLines = line -> !line.isEmpty();
-		return contents.stream().map(this::buildLine).filter(notEmptyLines).collect(joining(lineBreak));
+		return contents.stream().map(this::buildLine).filter(line -> !line.isEmpty()).collect(joining(lineBreak));
 	}
 
 	private String buildLine(T content) {
-		return (functions.stream().map(function -> buildCell(content, function)).collect(joining(delimiter)));
+		return functions.stream().map(function -> buildCell(content, function)).collect(joining(delimiter));
 	}
 
 	private String buildCell(T content, Column<T> column) {
@@ -55,15 +54,11 @@ class CsvDocumentPrinter<T> implements CsvPrinter {
 	}
 
 	private Object extractCellContent(T content, Column<T> column) {
-		return extractContentByFunction(content, column);
-	}
-
-	private Object extractContentByFunction(T content, Column<T> column) {
 		return column.getFunction().apply(content);
 	}
 
 	private String formattContentByFormatter(Object content, Column<T> column) {
-		if (content == null) {
+		if (Objects.isNull(content)) {
 			return "";
 		}
 
