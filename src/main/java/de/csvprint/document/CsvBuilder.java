@@ -18,6 +18,10 @@ public class CsvBuilder<T> {
 		this.header = Objects.requireNonNull(header);
 		this.contents = Objects.requireNonNull(contents);
 		this.functions = Objects.requireNonNull(functions);
+
+		if (header.size() != functions.size()) {
+			throw new IllegalArgumentException("Size of header list and funtions list is not the same");
+		}
 	}
 
 	public CsvBuilder<T> quote(String quote) {

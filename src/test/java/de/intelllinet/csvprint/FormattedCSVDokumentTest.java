@@ -105,12 +105,7 @@ public class FormattedCSVDokumentTest {
 		@Test
 		@DisplayName("an empty function list, than it should only print the header")
 		public void testPrintWithEmpyFuntions() throws Exception {
-			CsvPrinter dokument = CsvPrinterFactory.getInstance(new CsvBuilder<>(header, content, emptyList()));
-			String actualContent = new String(dokument.print());
-
-			String expectedContent = "Age;Firstname;Lastname;Married ?;Birthday;Income in €\n";
-
-			assertEquals(expectedContent, actualContent);
+			assertThrows(IllegalArgumentException.class, () -> new CsvBuilder<>(header, content, emptyList()));
 		}
 
 		@Test
@@ -183,6 +178,53 @@ public class FormattedCSVDokumentTest {
 			String expectedContent = "Age;Firstname;Lastname;Married ?;Birthday;Income in €\n" //
 					+ "18;Maik;Muster;no;;120,21\n" //
 					+ "38;;Schuster;yes;15.01.1981;3010,45";
+
+			assertEquals(expectedContent, actualContent);
+		}
+
+		@Test
+		@DisplayName("a header list and function list have different lengths. Function list has fewer items")
+		public void testPrintPeopleWithFunctionListFewerItems() throws Exception {
+			functions = new ArrayList<>();
+			functions.add(new Column<>(Person::getAge));
+			functions.add(new Column<>(Person::isMarried, new BooleanYesNoFormatter()));
+			functions.add(new Column<>(Person::getBirthday, new LocalDateFormatter("dd.MM.yyyy")));
+			functions.add(new Column<>(Person::getIncome, new FloatFormatter()));
+
+			assertThrows(IllegalArgumentException.class, () -> new CsvBuilder<>(header, content, functions));
+
+		}
+
+		@Test
+		@DisplayName("a line break in a cell should be printed in file as content")
+		public void testPrintPeopleSuccessfullyWithLinebreakInContent() throws Exception {
+			content = new ArrayList<>();
+			content.add(new Person(18, "Maik", "Must\ner", false, LocalDate.of(2001, 1, 12), 120.21));
+			content.add(new Person(38, "Lisa", "Schuster", true, LocalDate.of(1981, 1, 15), 3010.45));
+			CsvPrinter dokument = CsvPrinterFactory.getInstance(new CsvBuilder<>(header, content, functions));
+
+			String actualContent = new String(dokument.print());
+
+			String expectedContent = "Age;Firstname;Lastname;Married ?;Birthday;Income in €\n" //
+					+ "18;Maik;Must\ner;no;12.01.2001;120,21\n" //
+					+ "38;Lisa;Schuster;yes;15.01.1981;3010,45";
+
+			assertEquals(expectedContent, actualContent);
+		}
+
+		@Test
+		@DisplayName("a line break in a cell and custom quotes should be printed as content")
+		public void testPrintPeopleSuccessfullyWithLinebreakInContentWithCustomQuotes() throws Exception {
+			content = new ArrayList<>();
+			content.add(new Person(18, "Maik", "Must\ner", false, LocalDate.of(2001, 1, 12), 120.21));
+			content.add(new Person(38, "Lisa", "Schuster", true, LocalDate.of(1981, 1, 15), 3010.45));
+			CsvPrinter doc = CsvPrinterFactory.getInstance(new CsvBuilder<>(header, content, functions).quote("\""));
+
+			String actualContent = new String(doc.print());
+
+			String expectedContent = "\"Age\";\"Firstname\";\"Lastname\";\"Married ?\";\"Birthday\";\"Income in €\"\n" //
+					+ "\"18\";\"Maik\";\"Must\ner\";\"no\";\"12.01.2001\";\"120,21\"\n" //
+					+ "\"38\";\"Lisa\";\"Schuster\";\"yes\";\"15.01.1981\";\"3010,45\"";
 
 			assertEquals(expectedContent, actualContent);
 		}

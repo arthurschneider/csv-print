@@ -10,22 +10,19 @@ import de.csvprint.formatter.Formatter;
 public class FloatFormatter implements Formatter {
 
 	private static final String STANDARD_PATTERN = "#0.00";
-	private final Locale locale;
-	private final String pattern;
+	private Locale locale;
+	private String pattern;
 
 	public FloatFormatter() {
-		this.locale = Locale.GERMANY;
-		this.pattern = STANDARD_PATTERN;
+		this(Locale.GERMANY, STANDARD_PATTERN);
 	}
 
 	public FloatFormatter(Locale locale) {
-		this.locale = locale;
-		this.pattern = STANDARD_PATTERN;
+		this(locale, STANDARD_PATTERN);
 	}
 
 	public FloatFormatter(String pattern) {
-		this.locale = Locale.GERMANY;
-		this.pattern = pattern;
+		this(Locale.GERMANY, pattern);
 	}
 
 	public FloatFormatter(Locale locale, String pattern) {

@@ -109,3 +109,10 @@ Examples:
 	printer.print();
 	
 ```
+
+### System settings when running tests
+In order to see DEBUG messages, you would need to pass in this System Property at your Java startup.
+
+```
+-Dorg.slf4j.simpleLogger.defaultLogLevel=DEBUG
+```
