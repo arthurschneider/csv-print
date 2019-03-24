@@ -6,7 +6,12 @@ import java.util.List;
 import java.util.Objects;
 import java.util.StringJoiner;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 class CsvDocumentPrinter<T> implements CsvPrinter {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(CsvDocumentPrinter.class);
 
 	private final List<T> contents;
 	private final List<String> header;
@@ -59,6 +64,7 @@ class CsvDocumentPrinter<T> implements CsvPrinter {
 
 	private String formattContentByFormatter(Object content, Column<T> column) {
 		if (Objects.isNull(content)) {
+			LOGGER.debug("Der Inhalt der Zelle hatte ein Null Wert");
 			return "";
 		}
 
