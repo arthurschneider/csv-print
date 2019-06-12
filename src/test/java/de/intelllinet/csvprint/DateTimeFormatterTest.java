@@ -25,8 +25,8 @@ import de.csvprint.formatter.datetime.LocalDateTimeFormatter;
 
 public class DateTimeFormatterTest {
 
-	private static final LocalDateTimeFormatter LOCAL_DATE_TIME_FORMATTER = new LocalDateTimeFormatter("dd.MM.yyyy");
-	private static final DateAndTimeFormatter DATEANDTIME_FORMATTER = new DateAndTimeFormatter("dd.MM.yyyy");
+	LocalDateTimeFormatter localDateTimeFormatter = new LocalDateTimeFormatter("dd.MM.yyyy");
+	DateAndTimeFormatter dateAndTimeFormatter = new DateAndTimeFormatter("dd.MM.yyyy");
 
 	@Test
 	@DisplayName("Printer with a custom DateFormatter should print Date in specified format")
@@ -67,7 +67,7 @@ public class DateTimeFormatterTest {
 	public void testPrintLocalDateTime() throws Exception {
 		List<String> header = Arrays.asList("Birthday");
 		List<LocalDateTime> content = Arrays.asList(LocalDateTime.now());
-		List<Column<LocalDateTime>> functions = Arrays.asList(new Column<>(x -> x, LOCAL_DATE_TIME_FORMATTER));
+		List<Column<LocalDateTime>> functions = Arrays.asList(new Column<>(x -> x, localDateTimeFormatter));
 
 		CsvPrinter dokument = CsvPrinterFactory.getInstance(new CsvBuilder<>(header, content, functions));
 		String actualContent = new String(dokument.print());
@@ -140,7 +140,7 @@ public class DateTimeFormatterTest {
 		public void testPrintLocalDateAndTimeWithLocalDateTime() throws Exception {
 			List<String> header = Arrays.asList("Birthday");
 			List<LocalDateTime> content = Arrays.asList(LocalDateTime.now());
-			List<Column<LocalDateTime>> functions = Arrays.asList(new Column<>(x -> x, DATEANDTIME_FORMATTER));
+			List<Column<LocalDateTime>> functions = Arrays.asList(new Column<>(x -> x, dateAndTimeFormatter));
 
 			CsvPrinter dokument = CsvPrinterFactory.getInstance(new CsvBuilder<>(header, content, functions));
 			String actualContent = new String(dokument.print());
@@ -156,7 +156,7 @@ public class DateTimeFormatterTest {
 		public void testPrintLocalDateAndTimeWithDate() throws Exception {
 			List<String> header = Arrays.asList("Birthday");
 			List<Date> content = Arrays.asList(new Date());
-			List<Column<Date>> functions = Arrays.asList(new Column<>(x -> x, DATEANDTIME_FORMATTER));
+			List<Column<Date>> functions = Arrays.asList(new Column<>(x -> x, dateAndTimeFormatter));
 
 			CsvPrinter dokument = CsvPrinterFactory.getInstance(new CsvBuilder<>(header, content, functions));
 			String actualContent = new String(dokument.print());
@@ -172,7 +172,7 @@ public class DateTimeFormatterTest {
 		public void testPrintLocalDateAndTimeWithLocalDate() throws Exception {
 			List<String> header = Arrays.asList("Birthday");
 			List<LocalDate> content = Arrays.asList(LocalDate.now());
-			List<Column<LocalDate>> functions = Arrays.asList(new Column<>(x -> x, DATEANDTIME_FORMATTER));
+			List<Column<LocalDate>> functions = Arrays.asList(new Column<>(x -> x, dateAndTimeFormatter));
 
 			CsvPrinter dokument = CsvPrinterFactory.getInstance(new CsvBuilder<>(header, content, functions));
 			String actualContent = new String(dokument.print());

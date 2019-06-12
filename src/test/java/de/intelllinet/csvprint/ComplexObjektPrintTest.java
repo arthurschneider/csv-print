@@ -23,9 +23,9 @@ import de.intelllinet.csvprint.mock.models.Person;
 @DisplayName("When testing the CsvPrinter with complex Objects")
 public class ComplexObjektPrintTest {
 
-	private static List<String> header;
-	private static List<Family> content;
-	private static List<Column<Family>> functions;
+	List<String> header;
+	List<Family> content;
+	List<Column<Family>> functions;
 
 	@BeforeEach
 	public void setUpBeforeEachTest() throws Exception {
