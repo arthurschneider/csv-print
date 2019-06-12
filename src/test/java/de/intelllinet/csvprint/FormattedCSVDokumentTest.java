@@ -25,9 +25,9 @@ import de.intelllinet.csvprint.mock.models.Person;
 @DisplayName("When testing the CsvPrinter with")
 public class FormattedCSVDokumentTest {
 
-	private static List<String> header;
-	private static List<Person> content;
-	private static List<Column<Person>> functions;
+	List<String> header;
+	List<Person> content;
+	List<Column<Person>> functions;
 
 	@BeforeEach
 	public void setUpBeforeEachTest() throws Exception {

@@ -20,9 +20,9 @@ import de.csvprint.formatter.bool.BooleanYesNoFormatter;
 
 public class BooleanFormatterTest {
 
-	private static List<String> header;
-	private static List<Boolean> content;
-	private static List<Column<Boolean>> functions;
+	List<String> header;
+	List<Boolean> content;
+	List<Column<Boolean>> functions;
 
 	@BeforeEach
 	public void setUpBeforeEachTest() throws Exception {

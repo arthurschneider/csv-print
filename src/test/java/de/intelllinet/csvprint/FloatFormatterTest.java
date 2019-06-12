@@ -19,9 +19,9 @@ import de.csvprint.formatter.number.FloatFormatter;
 
 public class FloatFormatterTest {
 
-	private static List<String> header;
-	private static List<Double> content;
-	private static List<Column<Double>> functions;
+	List<String> header;
+	List<Double> content;
+	List<Column<Double>> functions;
 
 	@BeforeEach
 	public void setUpBeforeEachTest() throws Exception {
