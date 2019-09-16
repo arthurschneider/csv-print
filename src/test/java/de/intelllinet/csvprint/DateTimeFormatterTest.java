@@ -111,7 +111,6 @@ public class DateTimeFormatterTest {
 		assertEquals(expectedContent, actualContent);
 	}
 
-	@Test
 	@RepeatedTest(3)
 	@DisplayName("Printer without a formatter should print LocalDateTime as a simple String")
 	public void testPrintLocalDateTimeWithoutFormatter() throws Exception {
@@ -134,7 +133,6 @@ public class DateTimeFormatterTest {
 	@DisplayName("Printer with a custom DateAndTimeFormatter")
 	public class DateAndTime {
 
-		@Test
 		@RepeatedTest(3)
 		@DisplayName("should print LocalDateTime object in specified format")
 		public void testPrintLocalDateAndTimeWithLocalDateTime() throws Exception {
