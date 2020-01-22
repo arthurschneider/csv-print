@@ -33,13 +33,13 @@ public class FloatFormatterTest {
 	}
 
 	@Test
-	@DisplayName("Printer without a defalut FloatFormatter should print floating numbers in German notation")
+	@DisplayName("Printer without a defalut FloatFormatter should print floating numbers in German notation.")
 	public void testPrintStandardFloat() throws Exception {
 		functions = new ArrayList<>();
 		functions.add(new Column<>(x -> x, new FloatFormatter()));
 
-		CsvPrinter dokument = CsvPrinterFactory.getInstance(new CsvBuilder<>(header, content, functions));
-		String actualContent = new String(dokument.print());
+		CsvPrinter printer = CsvPrinterFactory.getInstance(new CsvBuilder<>(header, content, functions));
+		String actualContent = new String(printer.print());
 
 		String expectedContent = "Sales 2019\n" //
 				+ "12,00\n" //
@@ -50,13 +50,13 @@ public class FloatFormatterTest {
 	}
 
 	@Test
-	@DisplayName("Printer without a us locale FloatFormatter should print floating numbers in US notation")
+	@DisplayName("Printer without a us locale FloatFormatter should print floating numbers in US notation.")
 	public void testPrintFloatWithCustomLocale() throws Exception {
 		functions = new ArrayList<>();
 		functions.add(new Column<>(x -> x, new FloatFormatter(Locale.US)));
 
-		CsvPrinter dokument = CsvPrinterFactory.getInstance(new CsvBuilder<>(header, content, functions));
-		String actualContent = new String(dokument.print());
+		CsvPrinter printer = CsvPrinterFactory.getInstance(new CsvBuilder<>(header, content, functions));
+		String actualContent = new String(printer.print());
 
 		String expectedContent = "Sales 2019\n" //
 				+ "12.00\n" //
@@ -67,13 +67,13 @@ public class FloatFormatterTest {
 	}
 
 	@Test
-	@DisplayName("Printer without a custom pattern FloatFormatter should print floating numbers in specified format")
+	@DisplayName("Printer without a custom pattern FloatFormatter should print floating numbers in specified format.")
 	public void testPrintFloatWithCustomPattern() throws Exception {
 		functions = new ArrayList<>();
 		functions.add(new Column<>(x -> x, new FloatFormatter("#0.000")));
 
-		CsvPrinter dokument = CsvPrinterFactory.getInstance(new CsvBuilder<>(header, content, functions));
-		String actualContent = new String(dokument.print());
+		CsvPrinter printer = CsvPrinterFactory.getInstance(new CsvBuilder<>(header, content, functions));
+		String actualContent = new String(printer.print());
 
 		String expectedContent = "Sales 2019\n" //
 				+ "12,000\n" //
@@ -84,13 +84,13 @@ public class FloatFormatterTest {
 	}
 
 	@Test
-	@DisplayName("Printer without a custom pattern and a us locale FloatFormatter should print numbers as specified")
+	@DisplayName("Printer without a custom pattern and a us locale FloatFormatter should print numbers as specified.")
 	public void testPrintFloatWithCustomLocaleAndPattern() throws Exception {
 		functions = new ArrayList<>();
 		functions.add(new Column<>(x -> x, new FloatFormatter(Locale.US, "#0.000")));
 
-		CsvPrinter dokument = CsvPrinterFactory.getInstance(new CsvBuilder<>(header, content, functions));
-		String actualContent = new String(dokument.print());
+		CsvPrinter printer = CsvPrinterFactory.getInstance(new CsvBuilder<>(header, content, functions));
+		String actualContent = new String(printer.print());
 
 		String expectedContent = "Sales 2019\n" //
 				+ "12.000\n" //
@@ -101,15 +101,15 @@ public class FloatFormatterTest {
 	}
 
 	@Test
-	@DisplayName("Printer without a custom pattern and a us locale FloatFormatter should print numbers as specified")
+	@DisplayName("Printer without a custom pattern and a us locale FloatFormatter should print numbers as specified.")
 	public void testPrintFloatWithCustomLocaleAndPatternLongerDecimal() throws Exception {
 		content = Arrays.asList(12.34567, .7, 69000.0);
 
 		functions = new ArrayList<>();
 		functions.add(new Column<>(x -> x, new FloatFormatter(Locale.US, "#0.000")));
 
-		CsvPrinter dokument = CsvPrinterFactory.getInstance(new CsvBuilder<>(header, content, functions));
-		String actualContent = new String(dokument.print());
+		CsvPrinter printer = CsvPrinterFactory.getInstance(new CsvBuilder<>(header, content, functions));
+		String actualContent = new String(printer.print());
 
 		String expectedContent = "Sales 2019\n" //
 				+ "12.346\n" //

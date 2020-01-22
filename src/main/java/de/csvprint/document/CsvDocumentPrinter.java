@@ -45,7 +45,8 @@ class CsvDocumentPrinter<T> implements CsvPrinter {
 	}
 
 	private String buildBody() {
-		return contents.stream().map(this::buildLine).filter(line -> !line.isEmpty()).collect(joining(lineBreak));
+		return contents.stream().filter(Objects::nonNull).map(this::buildLine).filter(line -> !line.isEmpty())
+				.collect(joining(lineBreak));
 	}
 
 	private String buildLine(T content) {
@@ -70,9 +71,9 @@ class CsvDocumentPrinter<T> implements CsvPrinter {
 
 		if (column.hasFormatter()) {
 			return column.getFormatter().format(content);
+		} else {
+			return content.toString();
 		}
-
-		return content.toString();
 	}
 
 	private String addQuotes(String fieldContent) {

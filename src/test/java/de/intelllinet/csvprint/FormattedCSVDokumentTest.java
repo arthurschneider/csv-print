@@ -57,19 +57,19 @@ public class FormattedCSVDokumentTest {
 	public class NullValueBuilder {
 
 		@Test
-		@DisplayName("a null header list, than it should throw a NullPointerException")
+		@DisplayName("a null header list, than it should throw a NullPointerException.")
 		public void testBuilderWithoutHeader() throws Exception {
 			assertThrows(NullPointerException.class, () -> new CsvBuilder<>(null, content, functions));
 		}
 
 		@Test
-		@DisplayName("a null content list, than it should throw a NullPointerException")
+		@DisplayName("a null content list, than it should throw a NullPointerException.")
 		public void testBuilderWithoutContent() throws Exception {
 			assertThrows(NullPointerException.class, () -> new CsvBuilder<>(header, null, functions));
 		}
 
 		@Test
-		@DisplayName("a null function list, than it should throw a NullPointerException")
+		@DisplayName("a null function list, than it should throw a NullPointerException.")
 		public void testBuilderWithoutFuntions() throws Exception {
 			assertThrows(NullPointerException.class, () -> new CsvBuilder<>(header, content, null));
 		}
@@ -80,22 +80,28 @@ public class FormattedCSVDokumentTest {
 	public class Printer {
 
 		@Test
-		@DisplayName(" a content list that contains null objects, than it should throw a NullPointerException")
+		@DisplayName(" a content list that contains null objects, than it should print succesfully a CSV file.")
 		public void testPrintPeopleWithNullBean() throws Exception {
 			content = new ArrayList<>();
 			content.add(new Person(18, "Maik", "Muster", false, LocalDate.of(2001, 1, 12), 120.21));
 			content.add(null);
 
-			CsvPrinter doc = CsvPrinterFactory.getInstance(new CsvBuilder<>(header, content, functions));
+			CsvPrinter printer = CsvPrinterFactory.getInstance(new CsvBuilder<>(header, content, functions));
 
-			assertThrows(NullPointerException.class, () -> doc.print());
+			String actualContent = new String(printer.print());
+
+			String expectedContent = "Age;Firstname;Lastname;Married ?;Birthday;Income in €\n" //
+					+ "18;Maik;Muster;no;12.01.2001;120,21";
+
+			assertEquals(expectedContent, actualContent);
+
 		}
 
 		@Test
-		@DisplayName("an empty content list, than it should only print the header")
+		@DisplayName("an empty content list, than it should only print the header.")
 		public void testPrintWithEmpyContent() throws Exception {
-			CsvPrinter dokument = CsvPrinterFactory.getInstance(new CsvBuilder<>(header, emptyList(), functions));
-			String actualContent = new String(dokument.print());
+			CsvPrinter printer = CsvPrinterFactory.getInstance(new CsvBuilder<>(header, emptyList(), functions));
+			String actualContent = new String(printer.print());
 
 			String expectedContent = "Age;Firstname;Lastname;Married ?;Birthday;Income in €\n";
 
@@ -103,17 +109,17 @@ public class FormattedCSVDokumentTest {
 		}
 
 		@Test
-		@DisplayName("an empty function list, than it should only print the header")
+		@DisplayName("an empty function list, than it should only print the header.")
 		public void testPrintWithEmpyFuntions() throws Exception {
 			assertThrows(IllegalArgumentException.class, () -> new CsvBuilder<>(header, content, emptyList()));
 		}
 
 		@Test
-		@DisplayName("a correct parameter list, than it should print succesfully a CSV file")
+		@DisplayName("a correct parameter list, than it should print succesfully a CSV file.")
 		public void testPrintPeopleSuccessfully() throws Exception {
-			CsvPrinter dokument = CsvPrinterFactory.getInstance(new CsvBuilder<>(header, content, functions));
+			CsvPrinter printer = CsvPrinterFactory.getInstance(new CsvBuilder<>(header, content, functions));
 
-			String actualContent = new String(dokument.print());
+			String actualContent = new String(printer.print());
 
 			String expectedContent = "Age;Firstname;Lastname;Married ?;Birthday;Income in €\n" //
 					+ "18;Maik;Muster;no;12.01.2001;120,21\n" //
@@ -123,12 +129,12 @@ public class FormattedCSVDokumentTest {
 		}
 
 		@Test
-		@DisplayName("a correct parameter list and with a custom delimiter, than it should print succesfully a CSV file ")
+		@DisplayName("a correct parameter list and with a custom delimiter, than it should print succesfully a CSV file.")
 		public void testPrintPeopleSuccessfullyWithCustomDelimiter() throws Exception {
-			CsvPrinter dokument = CsvPrinterFactory
+			CsvPrinter printer = CsvPrinterFactory
 					.getInstance(new CsvBuilder<>(header, content, functions).delimiter(":"));
 
-			String actualContent = new String(dokument.print());
+			String actualContent = new String(printer.print());
 
 			String expectedContent = "Age:Firstname:Lastname:Married ?:Birthday:Income in €\n" //
 					+ "18:Maik:Muster:no:12.01.2001:120,21\n" //
@@ -138,11 +144,11 @@ public class FormattedCSVDokumentTest {
 		}
 
 		@Test
-		@DisplayName("a correct parameters and with a custom quote, than it should print succesfully a CSV file ")
+		@DisplayName("a correct parameters and with a custom quote, than it should print succesfully a CSV file.")
 		public void testPrintPeopleSuccessfullyWithCustomQuotes() throws Exception {
-			CsvPrinter dokument = CsvPrinterFactory
+			CsvPrinter printer = CsvPrinterFactory
 					.getInstance(new CsvBuilder<>(header, content, functions).quote("\""));
-			String actualContent = new String(dokument.print());
+			String actualContent = new String(printer.print());
 
 			String expectedContent = "\"Age\";\"Firstname\";\"Lastname\";\"Married ?\";\"Birthday\";\"Income in €\"\n" //
 					+ "\"18\";\"Maik\";\"Muster\";\"no\";\"12.01.2001\";\"120,21\"\n" //
@@ -152,11 +158,11 @@ public class FormattedCSVDokumentTest {
 		}
 
 		@Test
-		@DisplayName("a correct parameters and with a custom line break, than it should print succesfully a CSV file ")
+		@DisplayName("a correct parameters and with a custom line break, than it should print succesfully a CSV file.")
 		public void testPrintPeopleSuccessfullyWithCustomLineBreaks() throws Exception {
-			CsvPrinter dokument = CsvPrinterFactory
+			CsvPrinter printer = CsvPrinterFactory
 					.getInstance(new CsvBuilder<>(header, content, functions).lineBreak("\r\n"));
-			String actualContent = new String(dokument.print());
+			String actualContent = new String(printer.print());
 
 			String expectedContent = "Age;Firstname;Lastname;Married ?;Birthday;Income in €\r\n" //
 					+ "18;Maik;Muster;no;12.01.2001;120,21\r\n" //
@@ -166,14 +172,14 @@ public class FormattedCSVDokumentTest {
 		}
 
 		@Test
-		@DisplayName("a content list objects have null values,that it should print empty strings in CSV file")
+		@DisplayName("a content list objects have null values,that it should print empty strings in CSV file.")
 		public void testPrintPeopleWithNullValues() throws Exception {
 			content = new ArrayList<>();
 			content.add(new Person(18, "Maik", "Muster", false, null, 120.21));
 			content.add(new Person(38, null, "Schuster", true, LocalDate.of(1981, 1, 15), 3010.45));
 
-			CsvPrinter doc = CsvPrinterFactory.getInstance(new CsvBuilder<>(header, content, functions));
-			String actualContent = new String(doc.print());
+			CsvPrinter printer = CsvPrinterFactory.getInstance(new CsvBuilder<>(header, content, functions));
+			String actualContent = new String(printer.print());
 
 			String expectedContent = "Age;Firstname;Lastname;Married ?;Birthday;Income in €\n" //
 					+ "18;Maik;Muster;no;;120,21\n" //
@@ -183,7 +189,7 @@ public class FormattedCSVDokumentTest {
 		}
 
 		@Test
-		@DisplayName("a header list and function list have different lengths. Function list has fewer items")
+		@DisplayName("a header list and function list have different lengths. Function list has fewer items.")
 		public void testPrintPeopleWithFunctionListFewerItems() throws Exception {
 			functions = new ArrayList<>();
 			functions.add(new Column<>(Person::getAge));
@@ -196,14 +202,14 @@ public class FormattedCSVDokumentTest {
 		}
 
 		@Test
-		@DisplayName("a line break in a cell should be printed in file as content")
+		@DisplayName("a line break in a cell should be printed in file as content.")
 		public void testPrintPeopleSuccessfullyWithLinebreakInContent() throws Exception {
 			content = new ArrayList<>();
 			content.add(new Person(18, "Maik", "Must\ner", false, LocalDate.of(2001, 1, 12), 120.21));
 			content.add(new Person(38, "Lisa", "Schuster", true, LocalDate.of(1981, 1, 15), 3010.45));
-			CsvPrinter dokument = CsvPrinterFactory.getInstance(new CsvBuilder<>(header, content, functions));
+			CsvPrinter printer = CsvPrinterFactory.getInstance(new CsvBuilder<>(header, content, functions));
 
-			String actualContent = new String(dokument.print());
+			String actualContent = new String(printer.print());
 
 			String expectedContent = "Age;Firstname;Lastname;Married ?;Birthday;Income in €\n" //
 					+ "18;Maik;Must\ner;no;12.01.2001;120,21\n" //
@@ -213,14 +219,15 @@ public class FormattedCSVDokumentTest {
 		}
 
 		@Test
-		@DisplayName("a line break in a cell and custom quotes should be printed as content")
+		@DisplayName("a line break in a cell and custom quotes should be printed as content.")
 		public void testPrintPeopleSuccessfullyWithLinebreakInContentWithCustomQuotes() throws Exception {
 			content = new ArrayList<>();
 			content.add(new Person(18, "Maik", "Must\ner", false, LocalDate.of(2001, 1, 12), 120.21));
 			content.add(new Person(38, "Lisa", "Schuster", true, LocalDate.of(1981, 1, 15), 3010.45));
-			CsvPrinter doc = CsvPrinterFactory.getInstance(new CsvBuilder<>(header, content, functions).quote("\""));
+			CsvPrinter printer = CsvPrinterFactory
+					.getInstance(new CsvBuilder<>(header, content, functions).quote("\""));
 
-			String actualContent = new String(doc.print());
+			String actualContent = new String(printer.print());
 
 			String expectedContent = "\"Age\";\"Firstname\";\"Lastname\";\"Married ?\";\"Birthday\";\"Income in €\"\n" //
 					+ "\"18\";\"Maik\";\"Must\ner\";\"no\";\"12.01.2001\";\"120,21\"\n" //

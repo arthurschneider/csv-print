@@ -70,11 +70,11 @@ public class ComplexObjektPrintTest {
 	}
 
 	@Test
-	@DisplayName("the csv file should be printed successfully")
+	@DisplayName("the csv file should be printed successfully.")
 	public void testPrintFamilySuccessfully() throws Exception {
-		CsvPrinter dokument = CsvPrinterFactory.getInstance(new CsvBuilder<>(header, content, functions));
+		CsvPrinter printer = CsvPrinterFactory.getInstance(new CsvBuilder<>(header, content, functions));
 
-		String actualContent = new String(dokument.print());
+		String actualContent = new String(printer.print());
 
 		String expectedContent = "Living together ?;Living together since;Age Father;Firstname Father;Lastname Father;"
 				+ "Married ? Father;Birthday Father;Income in € Father;Age Mother;Firstname Mother;Lastname Mother;"
