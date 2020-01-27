@@ -1,6 +1,9 @@
 name: Java Build
 
-on: [push]
+on:
+  push:
+    branches:
+      -master
 
 jobs:
   build:
