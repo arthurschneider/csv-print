@@ -57,4 +57,14 @@
 			</plugin>
 		</plugins>
 	</build>
+
+
+	<distributionManagement>
+		<repository>
+			<id>github</id>
+			<name>GitHub arthurschneider Apache Maven Packages</name>
+			<url>https://maven.pkg.github.com/arthurschneider/csvprint</url>
+		</repository>
+	</distributionManagement>
+
 </project>
