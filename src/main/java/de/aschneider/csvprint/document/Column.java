@@ -1,8 +1,8 @@
-package de.csvprint.document;
+package de.aschneider.csvprint.document;
 
 import java.util.function.Function;
 
-import de.csvprint.formatter.Formatter;
+import de.aschneider.csvprint.formatter.Formatter;
 
 public class Column<T> {
 

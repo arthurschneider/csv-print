@@ -1,4 +1,4 @@
-package de.csvprint.document;
+package de.aschneider.csvprint.document;
 
 public class CsvPrinterFactory {
 

@@ -1,4 +1,4 @@
-package de.csvprint.document;
+package de.aschneider.csvprint.document;
 
 import static java.util.stream.Collectors.joining;
 

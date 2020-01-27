@@ -1,4 +1,4 @@
-package de.csvprint.document;
+package de.aschneider.csvprint.document;
 
 import java.util.List;
 import java.util.Objects;

@@ -1,6 +1,6 @@
-package de.csvprint.formatter.bool;
+package de.aschneider.csvprint.formatter.bool;
 
-import de.csvprint.formatter.Formatter;
+import de.aschneider.csvprint.formatter.Formatter;
 
 public class BooleanOneZeroFormatter implements Formatter {
 

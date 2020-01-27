@@ -1,4 +1,4 @@
-package de.csvprint.formatter;
+package de.aschneider.csvprint.formatter;
 
 public interface Formatter {
 

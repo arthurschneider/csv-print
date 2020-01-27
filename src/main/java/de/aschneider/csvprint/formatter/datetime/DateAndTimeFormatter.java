@@ -1,10 +1,10 @@
-package de.csvprint.formatter.datetime;
+package de.aschneider.csvprint.formatter.datetime;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 
-import de.csvprint.formatter.Formatter;
+import de.aschneider.csvprint.formatter.Formatter;
 
 public class DateAndTimeFormatter implements Formatter {
 

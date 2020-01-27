@@ -1,4 +1,4 @@
-package de.intelllinet.csvprint.mock.models;
+package de.aschneider.csvprint.mock.models;
 
 import java.time.LocalDate;
 

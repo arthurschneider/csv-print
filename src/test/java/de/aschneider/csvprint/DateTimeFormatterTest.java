@@ -1,4 +1,4 @@
-package de.intelllinet.csvprint;
+package de.aschneider.csvprint;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -14,14 +14,14 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 
-import de.csvprint.document.Column;
-import de.csvprint.document.CsvBuilder;
-import de.csvprint.document.CsvPrinter;
-import de.csvprint.document.CsvPrinterFactory;
-import de.csvprint.formatter.datetime.DateAndTimeFormatter;
-import de.csvprint.formatter.datetime.DateFormatter;
-import de.csvprint.formatter.datetime.LocalDateFormatter;
-import de.csvprint.formatter.datetime.LocalDateTimeFormatter;
+import de.aschneider.csvprint.document.Column;
+import de.aschneider.csvprint.document.CsvBuilder;
+import de.aschneider.csvprint.document.CsvPrinter;
+import de.aschneider.csvprint.document.CsvPrinterFactory;
+import de.aschneider.csvprint.formatter.datetime.DateAndTimeFormatter;
+import de.aschneider.csvprint.formatter.datetime.DateFormatter;
+import de.aschneider.csvprint.formatter.datetime.LocalDateFormatter;
+import de.aschneider.csvprint.formatter.datetime.LocalDateTimeFormatter;
 
 public class DateTimeFormatterTest {
 
