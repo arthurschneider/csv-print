@@ -50,7 +50,7 @@ A service class representing the API call:
 	// This list containing a Function and a Formatter(optional)
 	// For each Column you would like to print,
 	// you should specify a function which will be called on the content
-	// The Formatter formatts the output of the Function to a String
+	// The Formatter formats the output of the Function to a String
 	List<Column<Person>> functions = new ArrayList<>();
 	functions.add(new Column<>(Person::getAge));
 	functions.add(new Column<>(Person::getFirstname));
@@ -59,7 +59,7 @@ A service class representing the API call:
 	functions.add(new Column<>(Person::getBirthday, new LocalDateFormatter("dd.MM.yyyy")));
 	functions.add(new Column<>(Person::getIncome, new FloatFormatter()));
 	
-	// Initialize CSVPrinter with content
+	// Initialise CSVPrinter with content
 	CsvPrinter printer = CsvPrinterFactory.getInstance(new CsvBuilder<>(header, content, functions));
 	
 	// Call the function 
@@ -75,7 +75,7 @@ Output :
 ```
 
 
-### Advanced examples and tipps
+### Advanced examples and tips
 
 You can build your own Formatter by implementing the interface **Formatter.java**   
 (This class is already shipped with this library.)
@@ -91,7 +91,7 @@ The interface class:
 ```
 
 You can also modify the **line breaks**, **delimiter** and value **quotes** of the csv file.  
-Just use the optinal functions of the Builder class.
+Just use the optional functions of the Builder class.
 
 Examples:
 
