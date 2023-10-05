@@ -8,7 +8,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        java: [17, 21]
+        java: [17, 20]
     steps:
     - name: Checkout
       uses: actions/checkout@v4
@@ -17,6 +17,6 @@ jobs:
       with:
         java-version: ${{matrix.java}}
         distribution: 'temurin'
-        architexture: x64
+        architecture: x64
     - name: Test with Maven
       run: mvn test
