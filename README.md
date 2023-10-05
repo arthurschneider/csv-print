@@ -3,7 +3,7 @@
 
 ### Prerequisites
 
- - Java 8 or newer
+ - Java 17 or newer
  - To run the test you need Junit 5 or newer
 
 ### Using this library
@@ -13,7 +13,7 @@ Here is an example how to use this library.
 
 A POJO Class representing data:
 
-```javascript
+```java
 public class Person {
 
 	private int age;
@@ -31,36 +31,28 @@ public class Person {
  
 A service class representing the API call: 
  
-```javascript
-	//This will be the first line in the csv file
-	// The order in the list represent the order of the columns in the file
-	List<String> header = new ArrayList<>();
-	header.add("Age");
-	header.add("Firstname");
-	header.add("Lastname");
-	header.add("Married ?");
-	header.add("Birthday");
-	header.add("Income in €");
-	
+```java
+
 	List<Person> content = new ArrayList<>();
 	content = new ArrayList<>();
 	content.add(new Person(18, "Maik", "Muster", false, LocalDate.of(2001, 1, 12), 120.21));
 	content.add(new Person(38, "Lisa", "Schuster", true, LocalDate.of(1981, 1, 15), 3010.45));
 	
-	// This list containing a Function and a Formatter(optional)
-	// For each Column you would like to print,
-	// you should specify a function which will be called on the content
-	// The Formatter formats the output of the Function to a String
+	// This list containing the cell name a function and a formatter(optional)
+	// For each column you would like to print,
+	// you should specify a name of the cell(first line), a function which will be called on the content.
+	// The formatter formats the output of the function to a String
 	List<Column<Person>> functions = new ArrayList<>();
-	functions.add(new Column<>(Person::getAge));
-	functions.add(new Column<>(Person::getFirstname));
-	functions.add(new Column<>(Person::getLastname));
-	functions.add(new Column<>(Person::isMarried, new BooleanYesNoFormatter()));
-	functions.add(new Column<>(Person::getBirthday, new LocalDateFormatter("dd.MM.yyyy")));
-	functions.add(new Column<>(Person::getIncome, new FloatFormatter()));
+	functions = new ArrayList<>();
+	functions.add(new Column<>("Age", Person::getAge));
+	functions.add(new Column<>("Firstname", Person::getFirstname));
+	functions.add(new Column<>("Lastname", Person::getLastname));
+	functions.add(new Column<>("Married ?", Person::isMarried, new BooleanYesNoFormatter()));
+	functions.add(new Column<>("Birthday", Person::getBirthday, new LocalDateFormatter("dd.MM.yyyy")));
+	functions.add(new Column<>("Income in €", Person::getIncome, new FloatFormatter()));
 	
-	// Initialise CSVPrinter with content
-	CsvPrinter printer = CsvPrinterFactory.getInstance(new CsvBuilder<>(header, content, functions));
+	// Initialize Printer with content
+	Printer printer = CsvPrinterFactory.getInstance(new CsvBuilder<>(content, functions));
 	
 	// Call the function 
 	byte[] csvFile = printer.print();
@@ -82,7 +74,7 @@ You can build your own Formatter by implementing the interface **Formatter.java*
 
 The interface class:
 
-```javascript
+```java
 	public interface Formatter {
 	
 		String format(Object object);
@@ -95,14 +87,15 @@ Just use the optional functions of the Builder class.
 
 Examples:
 
-```javascript
-	CsvBuilder builder = new CsvBuilder<>(header, content, functions).lineBreak("\r\n");
+```java
+
+	CsvBuilder builder = new CsvBuilder<>(content, functions).lineBreak("\r\n");
 	
-	CsvBuilder builder = new CsvBuilder<>(header, content, functions).delimiter(":");
+	CsvBuilder builder = new CsvBuilder<>(content, functions).delimiter(":");
 	
-	CsvBuilder builder = new CsvBuilder<>(header, content, functions).quote("\"");
+	CsvBuilder builder = new CsvBuilder<>(content, functions).quote("\"");
 	
-	CsvBuilder builder = new CsvBuilder<>(header, content, functions).lineBreak("\r\n").delimiter(":").quote("\"")
+	CsvBuilder builder = new CsvBuilder<>(content, functions).lineBreak("\r\n").delimiter(":").quote("\"")
 	
 	CsvPrinter printer = CsvPrinterFactory.getInstance(builder);
 	

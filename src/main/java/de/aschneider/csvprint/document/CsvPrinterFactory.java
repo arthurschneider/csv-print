@@ -6,7 +6,7 @@ public class CsvPrinterFactory {
 		throw new AssertionError();
 	}
 
-	public static <T> CsvPrinter getInstance(CsvBuilder<T> builder) {
+	public static <T> Printer getInstance(CsvBuilder<T> builder) {
 		return new CsvDocumentPrinter<>(builder);
 	}
 

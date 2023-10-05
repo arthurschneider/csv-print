@@ -1,20 +1,21 @@
 package de.aschneider.csvprint.document;
 
+import static java.util.Objects.isNull;
 import static java.util.stream.Collectors.joining;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.StringJoiner;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-class CsvDocumentPrinter<T> implements CsvPrinter {
+class CsvDocumentPrinter<T> implements Printer {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(CsvDocumentPrinter.class);
 
 	private final List<T> contents;
-	private final List<String> header;
 	private final List<Column<T>> functions;
 
 	private final String quote;
@@ -22,7 +23,6 @@ class CsvDocumentPrinter<T> implements CsvPrinter {
 	private final String lineBreak;
 
 	CsvDocumentPrinter(CsvBuilder<T> builder) {
-		this.header = builder.getHeader();
 		this.contents = builder.getContents();
 		this.functions = builder.getFunctions();
 
@@ -41,21 +41,29 @@ class CsvDocumentPrinter<T> implements CsvPrinter {
 	}
 
 	private String buildHead() {
-		return header.stream().map(this::addQuotes).collect(joining(delimiter));
+		return functions.stream() //
+				.map(Column::getHeader) //
+				.map(this::addQuotes) //
+				.collect(joining(delimiter));
 	}
 
 	private String buildBody() {
-		return contents.stream().filter(Objects::nonNull).map(this::buildLine).filter(line -> !line.isEmpty())
+		return contents.stream() //
+				.filter(Objects::nonNull) //
+				.map(this::buildLine) //
+				.filter(StringUtils::isNotBlank) //
 				.collect(joining(lineBreak));
 	}
 
 	private String buildLine(T content) {
-		return functions.stream().map(function -> buildCell(content, function)).collect(joining(delimiter));
+		return functions.stream() //
+				.map(function -> buildCell(content, function)) //
+				.collect(joining(delimiter));
 	}
 
 	private String buildCell(T content, Column<T> column) {
 		Object extractCellContent = extractCellContent(content, column);
-		String formattedCellContent = formattContentByFormatter(extractCellContent, column);
+		String formattedCellContent = formattCellContent(extractCellContent, column);
 		return addQuotes(formattedCellContent);
 	}
 
@@ -63,14 +71,14 @@ class CsvDocumentPrinter<T> implements CsvPrinter {
 		return column.getFunction().apply(content);
 	}
 
-	private String formattContentByFormatter(Object content, Column<T> column) {
-		if (Objects.isNull(content)) {
+	private String formattCellContent(Object content, Column<T> column) {
+		if (isNull(content)) {
 			LOGGER.debug("Der Inhalt der Zelle hatte ein Null Wert");
 			return "";
 		}
 
 		if (column.hasFormatter()) {
-			return column.getFormatter().format(content);
+			return column.format(content);
 		} else {
 			return content.toString();
 		}

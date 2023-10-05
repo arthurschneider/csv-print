@@ -1,6 +1,6 @@
 package de.aschneider.csvprint.document;
 
-public interface CsvPrinter {
+public interface Printer {
 
 	byte[] print();
 }

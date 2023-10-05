@@ -12,21 +12,19 @@ import org.junit.jupiter.api.Test;
 
 import de.aschneider.csvprint.document.Column;
 import de.aschneider.csvprint.document.CsvBuilder;
-import de.aschneider.csvprint.document.CsvPrinter;
 import de.aschneider.csvprint.document.CsvPrinterFactory;
+import de.aschneider.csvprint.document.Printer;
 import de.aschneider.csvprint.formatter.bool.BooleanJaNeinFormatter;
 import de.aschneider.csvprint.formatter.bool.BooleanOneZeroFormatter;
 import de.aschneider.csvprint.formatter.bool.BooleanYesNoFormatter;
 
-public class BooleanFormatterTest {
+class BooleanFormatterTest {
 
-	List<String> header;
 	List<Boolean> content;
 	List<Column<Boolean>> functions;
 
 	@BeforeEach
-	public void setUpBeforeEachTest() throws Exception {
-		header = Arrays.asList("Is full Aged");
+	void setUpBeforeEachTest() throws Exception {
 
 		content = Arrays.asList(true, false);
 
@@ -35,60 +33,64 @@ public class BooleanFormatterTest {
 
 	@Test
 	@DisplayName("Printer a BooleanYesNoFormatter should print for Booleans: true->yes and false->no.")
-	public void testPrintBoolsPatternYesNo() throws Exception {
-		functions.add(new Column<>(x -> x, new BooleanYesNoFormatter()));
+	void testPrintBoolsPatternYesNo() throws Exception {
+		functions.add(new Column<>("Is full Aged", x -> x, new BooleanYesNoFormatter()));
 
-		CsvPrinter printer = CsvPrinterFactory.getInstance(new CsvBuilder<>(header, content, functions));
+		Printer printer = CsvPrinterFactory.getInstance(new CsvBuilder<>(content, functions));
 		String actualContent = new String(printer.print());
 
-		String expectedContent = "Is full Aged\n" //
-				+ "yes\n" //
-				+ "no";
+		String expectedContent = """
+				Is full Aged
+				yes
+				no""";
 
 		assertEquals(expectedContent, actualContent);
 	}
 
 	@Test
 	@DisplayName("Printer a BooleanJaNeinFormatter should print for Booleans: true->ja and false->nein.")
-	public void testPrintBoolsPatternJaNein() throws Exception {
-		functions.add(new Column<>(x -> x, new BooleanJaNeinFormatter()));
+	void testPrintBoolsPatternJaNein() throws Exception {
+		functions.add(new Column<>("Is full Aged", x -> x, new BooleanJaNeinFormatter()));
 
-		CsvPrinter printer = CsvPrinterFactory.getInstance(new CsvBuilder<>(header, content, functions));
+		Printer printer = CsvPrinterFactory.getInstance(new CsvBuilder<>(content, functions));
 		String actualContent = new String(printer.print());
 
-		String expectedContent = "Is full Aged\n" //
-				+ "ja\n" //
-				+ "nein";
+		String expectedContent = """
+				Is full Aged
+				ja
+				nein""";
 
 		assertEquals(expectedContent, actualContent);
 	}
 
 	@Test
 	@DisplayName("Printer a BooleanOneZeroFormatter should print for Booleans: true->1 and false->0.")
-	public void testPrintBoolsPatternOneZero() throws Exception {
-		functions.add(new Column<>(x -> x, new BooleanOneZeroFormatter()));
+	void testPrintBoolsPatternOneZero() throws Exception {
+		functions.add(new Column<>("Is full Aged", x -> x, new BooleanOneZeroFormatter()));
 
-		CsvPrinter printer = CsvPrinterFactory.getInstance(new CsvBuilder<>(header, content, functions));
+		Printer printer = CsvPrinterFactory.getInstance(new CsvBuilder<>(content, functions));
 		String actualContent = new String(printer.print());
 
-		String expectedContent = "Is full Aged\n" //
-				+ "1\n" //
-				+ "0";
+		String expectedContent = """
+				Is full Aged
+				1
+				0""";
 
 		assertEquals(expectedContent, actualContent);
 	}
 
 	@Test
 	@DisplayName("Printer a without any Formatter should print for Booleans: true->true and false->false.")
-	public void testPrintBoolsWithoutFormatter() throws Exception {
-		functions.add(new Column<>(x -> x));
+	void testPrintBoolsWithoutFormatter() throws Exception {
+		functions.add(new Column<>("Is full Aged", x -> x));
 
-		CsvPrinter printer = CsvPrinterFactory.getInstance(new CsvBuilder<>(header, content, functions));
+		Printer printer = CsvPrinterFactory.getInstance(new CsvBuilder<>(content, functions));
 		String actualContent = new String(printer.print());
 
-		String expectedContent = "Is full Aged\n" //
-				+ "true\n" //
-				+ "false";
+		String expectedContent = """
+				Is full Aged
+				true
+				false""";
 
 		assertEquals(expectedContent, actualContent);
 	}

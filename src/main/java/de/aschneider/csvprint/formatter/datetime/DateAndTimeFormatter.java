@@ -16,7 +16,6 @@ public class DateAndTimeFormatter implements Formatter {
 
 	@Override
 	public String format(Object object) {
-
 		if (object instanceof Date) {
 			return new DateFormatter(pattern).format(object);
 		} else if (object instanceof LocalDate) {
@@ -26,6 +25,7 @@ public class DateAndTimeFormatter implements Formatter {
 		}
 
 		return object.toString();
+
 	}
 
 }

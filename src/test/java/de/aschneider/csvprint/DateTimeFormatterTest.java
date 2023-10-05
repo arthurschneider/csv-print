@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -16,26 +15,26 @@ import org.junit.jupiter.api.Test;
 
 import de.aschneider.csvprint.document.Column;
 import de.aschneider.csvprint.document.CsvBuilder;
-import de.aschneider.csvprint.document.CsvPrinter;
 import de.aschneider.csvprint.document.CsvPrinterFactory;
+import de.aschneider.csvprint.document.Printer;
+import de.aschneider.csvprint.formatter.Formatter;
 import de.aschneider.csvprint.formatter.datetime.DateAndTimeFormatter;
 import de.aschneider.csvprint.formatter.datetime.DateFormatter;
 import de.aschneider.csvprint.formatter.datetime.LocalDateFormatter;
 import de.aschneider.csvprint.formatter.datetime.LocalDateTimeFormatter;
 
-public class DateTimeFormatterTest {
+class DateTimeFormatterTest {
 
-	LocalDateTimeFormatter localDateTimeFormatter = new LocalDateTimeFormatter("dd.MM.yyyy");
-	DateAndTimeFormatter dateAndTimeFormatter = new DateAndTimeFormatter("dd.MM.yyyy");
+	Formatter localDateTimeFormatter = new LocalDateTimeFormatter("dd.MM.yyyy");
+	Formatter dateAndTimeFormatter = new DateAndTimeFormatter("dd.MM.yyyy");
 
 	@Test
 	@DisplayName("Printer with a custom DateFormatter should print Date in specified format.")
-	public void testPrintDate() throws Exception {
-		List<String> header = Arrays.asList("Birthday");
-		List<Date> content = Arrays.asList(new Date());
-		List<Column<Date>> functions = Arrays.asList(new Column<>(x -> x, new DateFormatter("dd.MM.yyyy")));
+	void testPrintDate() throws Exception {
+		var content = List.of(new Date());
+		var functions = List.of(new Column<Date>("Birthday", x -> x, new DateFormatter("dd.MM.yyyy")));
 
-		CsvPrinter printer = CsvPrinterFactory.getInstance(new CsvBuilder<>(header, content, functions));
+		Printer printer = CsvPrinterFactory.getInstance(new CsvBuilder<>(content, functions));
 		String actualContent = new String(printer.print());
 
 		String dateNow = LocalDate.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
@@ -47,12 +46,11 @@ public class DateTimeFormatterTest {
 
 	@Test
 	@DisplayName("Printer with a custom LocalDateFormatter should print LocalDate in specified format.")
-	public void testPrintLocalDate() throws Exception {
-		List<String> header = Arrays.asList("Birthday");
-		List<LocalDate> content = Arrays.asList(LocalDate.now());
-		List<Column<LocalDate>> functions = Arrays.asList(new Column<>(x -> x, new LocalDateFormatter("dd.MM.yyyy")));
+	void testPrintLocalDate() throws Exception {
+		var content = List.of(LocalDate.now());
+		var functions = List.of(new Column<LocalDate>("Birthday", x -> x, new LocalDateFormatter("dd.MM.yyyy")));
 
-		CsvPrinter printer = CsvPrinterFactory.getInstance(new CsvBuilder<>(header, content, functions));
+		Printer printer = CsvPrinterFactory.getInstance(new CsvBuilder<>(content, functions));
 		String actualContent = new String(printer.print());
 
 		String dateNow = LocalDate.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
@@ -64,12 +62,11 @@ public class DateTimeFormatterTest {
 
 	@Test
 	@DisplayName("Printer with a custom LocalDateTimeFormatter should print LocalDateTime in specified format.")
-	public void testPrintLocalDateTime() throws Exception {
-		List<String> header = Arrays.asList("Birthday");
-		List<LocalDateTime> content = Arrays.asList(LocalDateTime.now());
-		List<Column<LocalDateTime>> functions = Arrays.asList(new Column<>(x -> x, localDateTimeFormatter));
+	void testPrintLocalDateTime() throws Exception {
+		var content = List.of(LocalDateTime.now());
+		var functions = List.of(new Column<LocalDateTime>("Birthday", x -> x, localDateTimeFormatter));
 
-		CsvPrinter printer = CsvPrinterFactory.getInstance(new CsvBuilder<>(header, content, functions));
+		Printer printer = CsvPrinterFactory.getInstance(new CsvBuilder<>(content, functions));
 		String actualContent = new String(printer.print());
 
 		String dateNow = LocalDate.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
@@ -81,12 +78,11 @@ public class DateTimeFormatterTest {
 
 	@Test
 	@DisplayName("Printer without a formatter should print Date as a simple String.")
-	public void testPrintDateWithoutFormatter() throws Exception {
-		List<String> header = Arrays.asList("Birthday");
-		List<Date> content = Arrays.asList(new Date());
-		List<Column<Date>> functions = Arrays.asList(new Column<>(x -> x));
+	void testPrintDateWithoutFormatter() throws Exception {
+		var content = List.of(new Date());
+		var functions = List.of(new Column<Date>("Birthday", x -> x));
 
-		CsvPrinter printer = CsvPrinterFactory.getInstance(new CsvBuilder<>(header, content, functions));
+		Printer printer = CsvPrinterFactory.getInstance(new CsvBuilder<>(content, functions));
 		String actualContent = new String(printer.print());
 
 		String expectedContent = "Birthday\n" //
@@ -97,12 +93,11 @@ public class DateTimeFormatterTest {
 
 	@Test
 	@DisplayName("Printer without a formatter should print LocalDate as a simple String.")
-	public void testPrintLocalDateWithoutFormatter() throws Exception {
-		List<String> header = Arrays.asList("Birthday");
-		List<LocalDate> content = Arrays.asList(LocalDate.now());
-		List<Column<LocalDate>> functions = Arrays.asList(new Column<>(x -> x));
+	void testPrintLocalDateWithoutFormatter() throws Exception {
+		var content = List.of(LocalDate.now());
+		var functions = List.of(new Column<LocalDate>("Birthday", x -> x));
 
-		CsvPrinter printer = CsvPrinterFactory.getInstance(new CsvBuilder<>(header, content, functions));
+		Printer printer = CsvPrinterFactory.getInstance(new CsvBuilder<>(content, functions));
 		String actualContent = new String(printer.print());
 
 		String expectedContent = "Birthday\n" //
@@ -113,14 +108,13 @@ public class DateTimeFormatterTest {
 
 	@RepeatedTest(3)
 	@DisplayName("Printer without a formatter should print LocalDateTime as a simple String.")
-	public void testPrintLocalDateTimeWithoutFormatter() throws Exception {
+	void testPrintLocalDateTimeWithoutFormatter() throws Exception {
 		LocalDateTime now = LocalDateTime.now();
 
-		List<String> header = Arrays.asList("Birthday");
-		List<LocalDateTime> content = Arrays.asList(now);
-		List<Column<LocalDateTime>> functions = Arrays.asList(new Column<>(x -> x));
+		var content = List.of(now);
+		var functions = List.of(new Column<LocalDateTime>("Birthday", x -> x));
 
-		CsvPrinter printer = CsvPrinterFactory.getInstance(new CsvBuilder<>(header, content, functions));
+		Printer printer = CsvPrinterFactory.getInstance(new CsvBuilder<>(content, functions));
 		String actualContent = new String(printer.print());
 
 		String expectedContent = "Birthday\n" //
@@ -131,52 +125,36 @@ public class DateTimeFormatterTest {
 
 	@Nested
 	@DisplayName("Printer with a custom DateAndTimeFormatter")
-	public class DateAndTime {
+	class DateAndTime {
 
 		@RepeatedTest(3)
 		@DisplayName("should print LocalDateTime object in specified format.")
-		public void testPrintLocalDateAndTimeWithLocalDateTime() throws Exception {
-			List<String> header = Arrays.asList("Birthday");
-			List<LocalDateTime> content = Arrays.asList(LocalDateTime.now());
-			List<Column<LocalDateTime>> functions = Arrays.asList(new Column<>(x -> x, dateAndTimeFormatter));
+		void testPrintLocalDateAndTimeWithLocalDateTime() throws Exception {
+			var content = List.of(LocalDateTime.of(2023, 1, 23, 12, 55));
+			var functions = List.of(new Column<LocalDateTime>("Birthday", x -> x, dateAndTimeFormatter));
 
-			CsvPrinter printer = CsvPrinterFactory.getInstance(new CsvBuilder<>(header, content, functions));
+			Printer printer = CsvPrinterFactory.getInstance(new CsvBuilder<>(content, functions));
 			String actualContent = new String(printer.print());
 
-			String expectedContent = "Birthday\n" //
-					+ LocalDate.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
-
-			assertEquals(expectedContent, actualContent);
-		}
-
-		@Test
-		@DisplayName("should print Date object in specified format.")
-		public void testPrintLocalDateAndTimeWithDate() throws Exception {
-			List<String> header = Arrays.asList("Birthday");
-			List<Date> content = Arrays.asList(new Date());
-			List<Column<Date>> functions = Arrays.asList(new Column<>(x -> x, dateAndTimeFormatter));
-
-			CsvPrinter printer = CsvPrinterFactory.getInstance(new CsvBuilder<>(header, content, functions));
-			String actualContent = new String(printer.print());
-
-			String expectedContent = "Birthday\n" //
-					+ new DateFormatter("dd.MM.yyyy").format(new Date());
+			String expectedContent = """
+					Birthday
+					23.01.2023""";
 
 			assertEquals(expectedContent, actualContent);
 		}
 
 		@Test
 		@DisplayName("should print LocalDate object in specified format.")
-		public void testPrintLocalDateAndTimeWithLocalDate() throws Exception {
-			List<String> header = Arrays.asList("Birthday");
-			List<LocalDate> content = Arrays.asList(LocalDate.now());
-			List<Column<LocalDate>> functions = Arrays.asList(new Column<>(x -> x, dateAndTimeFormatter));
+		void testPrintLocalDateAndTimeWithLocalDate() throws Exception {
+			var content = List.of(LocalDate.of(2021, 12, 31));
+			var functions = List.of(new Column<LocalDate>("Birthday", x -> x, dateAndTimeFormatter));
 
-			CsvPrinter printer = CsvPrinterFactory.getInstance(new CsvBuilder<>(header, content, functions));
+			Printer printer = CsvPrinterFactory.getInstance(new CsvBuilder<>(content, functions));
 			String actualContent = new String(printer.print());
 
-			String expectedContent = "Birthday\n" //
-					+ LocalDate.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+			String expectedContent = """
+					Birthday
+					31.12.2021""";
 
 			assertEquals(expectedContent, actualContent);
 		}

@@ -15,7 +15,6 @@ import org.junit.jupiter.api.Test;
 
 import de.aschneider.csvprint.document.Column;
 import de.aschneider.csvprint.document.CsvBuilder;
-import de.aschneider.csvprint.document.CsvPrinter;
 import de.aschneider.csvprint.document.CsvPrinterFactory;
 import de.aschneider.csvprint.formatter.bool.BooleanYesNoFormatter;
 import de.aschneider.csvprint.formatter.datetime.LocalDateFormatter;
@@ -23,84 +22,71 @@ import de.aschneider.csvprint.formatter.number.FloatFormatter;
 import de.aschneider.csvprint.mock.models.Person;
 
 @DisplayName("When testing the CsvPrinter with")
-public class FormattedCSVDokumentTest {
+class FormattedCSVDokumentTest {
 
-	List<String> header;
-	List<Person> content;
-	List<Column<Person>> functions;
+	private List<Person> content;
+	private List<Column<Person>> functions;
 
 	@BeforeEach
-	public void setUpBeforeEachTest() throws Exception {
-		header = new ArrayList<>();
-		header.add("Age");
-		header.add("Firstname");
-		header.add("Lastname");
-		header.add("Married ?");
-		header.add("Birthday");
-		header.add("Income in €");
-
+	void setUpBeforeEachTest() throws Exception {
 		content = new ArrayList<>();
 		content.add(new Person(18, "Maik", "Muster", false, LocalDate.of(2001, 1, 12), 120.21));
 		content.add(new Person(38, "Lisa", "Schuster", true, LocalDate.of(1981, 1, 15), 3010.45));
 
 		functions = new ArrayList<>();
-		functions.add(new Column<>(Person::getAge));
-		functions.add(new Column<>(Person::getFirstname));
-		functions.add(new Column<>(Person::getLastname));
-		functions.add(new Column<>(Person::isMarried, new BooleanYesNoFormatter()));
-		functions.add(new Column<>(Person::getBirthday, new LocalDateFormatter("dd.MM.yyyy")));
-		functions.add(new Column<>(Person::getIncome, new FloatFormatter()));
+		functions.add(new Column<>("Age", Person::getAge));
+		functions.add(new Column<>("Firstname", Person::getFirstname));
+		functions.add(new Column<>("Lastname", Person::getLastname));
+		functions.add(new Column<>("Married ?", Person::isMarried, new BooleanYesNoFormatter()));
+		functions.add(new Column<>("Birthday", Person::getBirthday, new LocalDateFormatter("dd.MM.yyyy")));
+		functions.add(new Column<>("Income in €", Person::getIncome, new FloatFormatter()));
 	}
 
 	@Nested
 	@DisplayName("a Builder that has")
-	public class NullValueBuilder {
-
-		@Test
-		@DisplayName("a null header list, than it should throw a NullPointerException.")
-		public void testBuilderWithoutHeader() throws Exception {
-			assertThrows(NullPointerException.class, () -> new CsvBuilder<>(null, content, functions));
-		}
+	class NullValueBuilder {
 
 		@Test
 		@DisplayName("a null content list, than it should throw a NullPointerException.")
-		public void testBuilderWithoutContent() throws Exception {
-			assertThrows(NullPointerException.class, () -> new CsvBuilder<>(header, null, functions));
+		void testBuilderWithoutContent() throws Exception {
+			assertThrows(NullPointerException.class, () -> new CsvBuilder<>(null, functions));
 		}
 
 		@Test
 		@DisplayName("a null function list, than it should throw a NullPointerException.")
-		public void testBuilderWithoutFuntions() throws Exception {
-			assertThrows(NullPointerException.class, () -> new CsvBuilder<>(header, content, null));
+		void testBuilderWithoutFuntions() throws Exception {
+			assertThrows(NullPointerException.class, () -> new CsvBuilder<>(content, null));
 		}
 	}
 
 	@Nested
 	@DisplayName("a Printer that has")
-	public class Printer {
+	class Printer {
 
 		@Test
 		@DisplayName(" a content list that contains null objects, than it should print succesfully a CSV file.")
-		public void testPrintPeopleWithNullBean() throws Exception {
+		void testPrintPeopleWithNullBean() throws Exception {
 			content = new ArrayList<>();
 			content.add(new Person(18, "Maik", "Muster", false, LocalDate.of(2001, 1, 12), 120.21));
 			content.add(null);
 
-			CsvPrinter printer = CsvPrinterFactory.getInstance(new CsvBuilder<>(header, content, functions));
+			de.aschneider.csvprint.document.Printer printer = CsvPrinterFactory
+					.getInstance(new CsvBuilder<>(content, functions));
 
 			String actualContent = new String(printer.print());
 
-			String expectedContent = "Age;Firstname;Lastname;Married ?;Birthday;Income in €\n" //
-					+ "18;Maik;Muster;no;12.01.2001;120,21";
+			String expectedContent = """
+					Age;Firstname;Lastname;Married ?;Birthday;Income in €
+					18;Maik;Muster;no;12.01.2001;120,21""";
 
 			assertEquals(expectedContent, actualContent);
-
 		}
 
 		@Test
 		@DisplayName("an empty content list, than it should only print the header.")
-		public void testPrintWithEmpyContent() throws Exception {
-			CsvPrinter printer = CsvPrinterFactory.getInstance(new CsvBuilder<>(header, emptyList(), functions));
+		void testPrintWithEmpyContent() throws Exception {
+			de.aschneider.csvprint.document.Printer printer = CsvPrinterFactory
+					.getInstance(new CsvBuilder<>(emptyList(), functions));
 			String actualContent = new String(printer.print());
 
 			String expectedContent = "Age;Firstname;Lastname;Married ?;Birthday;Income in €\n";
@@ -110,128 +96,135 @@ public class FormattedCSVDokumentTest {
 
 		@Test
 		@DisplayName("an empty function list, than it should only print the header.")
-		public void testPrintWithEmpyFuntions() throws Exception {
-			assertThrows(IllegalArgumentException.class, () -> new CsvBuilder<>(header, content, emptyList()));
+		void testPrintWithEmpyFuntions() throws Exception {
+			de.aschneider.csvprint.document.Printer printer = CsvPrinterFactory
+					.getInstance(new CsvBuilder<>(content, emptyList()));
+
+			String actualContent = new String(printer.print());
+
+			String expectedContent = "\n";
+
+			assertEquals(expectedContent, actualContent);
 		}
 
 		@Test
 		@DisplayName("a correct parameter list, than it should print succesfully a CSV file.")
-		public void testPrintPeopleSuccessfully() throws Exception {
-			CsvPrinter printer = CsvPrinterFactory.getInstance(new CsvBuilder<>(header, content, functions));
+		void testPrintPeopleSuccessfully() throws Exception {
+			de.aschneider.csvprint.document.Printer printer = CsvPrinterFactory
+					.getInstance(new CsvBuilder<>(content, functions));
 
 			String actualContent = new String(printer.print());
 
-			String expectedContent = "Age;Firstname;Lastname;Married ?;Birthday;Income in €\n" //
-					+ "18;Maik;Muster;no;12.01.2001;120,21\n" //
-					+ "38;Lisa;Schuster;yes;15.01.1981;3010,45";
+			String expectedContent = """
+					Age;Firstname;Lastname;Married ?;Birthday;Income in €
+					18;Maik;Muster;no;12.01.2001;120,21
+					38;Lisa;Schuster;yes;15.01.1981;3010,45""";
 
 			assertEquals(expectedContent, actualContent);
 		}
 
 		@Test
 		@DisplayName("a correct parameter list and with a custom delimiter, than it should print succesfully a CSV file.")
-		public void testPrintPeopleSuccessfullyWithCustomDelimiter() throws Exception {
-			CsvPrinter printer = CsvPrinterFactory
-					.getInstance(new CsvBuilder<>(header, content, functions).delimiter(":"));
+		void testPrintPeopleSuccessfullyWithCustomDelimiter() throws Exception {
+			de.aschneider.csvprint.document.Printer printer = CsvPrinterFactory
+					.getInstance(new CsvBuilder<>(content, functions).delimiter(":"));
 
 			String actualContent = new String(printer.print());
 
-			String expectedContent = "Age:Firstname:Lastname:Married ?:Birthday:Income in €\n" //
-					+ "18:Maik:Muster:no:12.01.2001:120,21\n" //
-					+ "38:Lisa:Schuster:yes:15.01.1981:3010,45";
+			String expectedContent = """
+					Age:Firstname:Lastname:Married ?:Birthday:Income in €
+					18:Maik:Muster:no:12.01.2001:120,21
+					38:Lisa:Schuster:yes:15.01.1981:3010,45""";
 
 			assertEquals(expectedContent, actualContent);
 		}
 
 		@Test
 		@DisplayName("a correct parameters and with a custom quote, than it should print succesfully a CSV file.")
-		public void testPrintPeopleSuccessfullyWithCustomQuotes() throws Exception {
-			CsvPrinter printer = CsvPrinterFactory
-					.getInstance(new CsvBuilder<>(header, content, functions).quote("\""));
+		void testPrintPeopleSuccessfullyWithCustomQuotes() throws Exception {
+			de.aschneider.csvprint.document.Printer printer = CsvPrinterFactory
+					.getInstance(new CsvBuilder<>(content, functions).quote("\""));
 			String actualContent = new String(printer.print());
 
-			String expectedContent = "\"Age\";\"Firstname\";\"Lastname\";\"Married ?\";\"Birthday\";\"Income in €\"\n" //
-					+ "\"18\";\"Maik\";\"Muster\";\"no\";\"12.01.2001\";\"120,21\"\n" //
-					+ "\"38\";\"Lisa\";\"Schuster\";\"yes\";\"15.01.1981\";\"3010,45\"";
+			String expectedContent = """
+					"Age";"Firstname";"Lastname";"Married ?";"Birthday";"Income in €"
+					"18";"Maik";"Muster";"no";"12.01.2001";"120,21"
+					"38";"Lisa";"Schuster";"yes";"15.01.1981";"3010,45\"""";
 
 			assertEquals(expectedContent, actualContent);
 		}
 
 		@Test
 		@DisplayName("a correct parameters and with a custom line break, than it should print succesfully a CSV file.")
-		public void testPrintPeopleSuccessfullyWithCustomLineBreaks() throws Exception {
-			CsvPrinter printer = CsvPrinterFactory
-					.getInstance(new CsvBuilder<>(header, content, functions).lineBreak("\r\n"));
+		void testPrintPeopleSuccessfullyWithCustomLineBreaks() throws Exception {
+			de.aschneider.csvprint.document.Printer printer = CsvPrinterFactory
+					.getInstance(new CsvBuilder<>(content, functions).lineBreak("\r\n"));
 			String actualContent = new String(printer.print());
 
-			String expectedContent = "Age;Firstname;Lastname;Married ?;Birthday;Income in €\r\n" //
-					+ "18;Maik;Muster;no;12.01.2001;120,21\r\n" //
-					+ "38;Lisa;Schuster;yes;15.01.1981;3010,45";
+			String expectedContent = """
+					Age;Firstname;Lastname;Married ?;Birthday;Income in €\r
+					18;Maik;Muster;no;12.01.2001;120,21\r
+					38;Lisa;Schuster;yes;15.01.1981;3010,45""";
 
 			assertEquals(expectedContent, actualContent);
 		}
 
 		@Test
 		@DisplayName("a content list objects have null values,that it should print empty strings in CSV file.")
-		public void testPrintPeopleWithNullValues() throws Exception {
+		void testPrintPeopleWithNullValues() throws Exception {
 			content = new ArrayList<>();
 			content.add(new Person(18, "Maik", "Muster", false, null, 120.21));
 			content.add(new Person(38, null, "Schuster", true, LocalDate.of(1981, 1, 15), 3010.45));
 
-			CsvPrinter printer = CsvPrinterFactory.getInstance(new CsvBuilder<>(header, content, functions));
+			de.aschneider.csvprint.document.Printer printer = CsvPrinterFactory
+					.getInstance(new CsvBuilder<>(content, functions));
 			String actualContent = new String(printer.print());
 
-			String expectedContent = "Age;Firstname;Lastname;Married ?;Birthday;Income in €\n" //
-					+ "18;Maik;Muster;no;;120,21\n" //
-					+ "38;;Schuster;yes;15.01.1981;3010,45";
+			String expectedContent = """
+					Age;Firstname;Lastname;Married ?;Birthday;Income in €
+					18;Maik;Muster;no;;120,21
+					38;;Schuster;yes;15.01.1981;3010,45""";
 
 			assertEquals(expectedContent, actualContent);
 		}
 
 		@Test
-		@DisplayName("a header list and function list have different lengths. Function list has fewer items.")
-		public void testPrintPeopleWithFunctionListFewerItems() throws Exception {
-			functions = new ArrayList<>();
-			functions.add(new Column<>(Person::getAge));
-			functions.add(new Column<>(Person::isMarried, new BooleanYesNoFormatter()));
-			functions.add(new Column<>(Person::getBirthday, new LocalDateFormatter("dd.MM.yyyy")));
-			functions.add(new Column<>(Person::getIncome, new FloatFormatter()));
-
-			assertThrows(IllegalArgumentException.class, () -> new CsvBuilder<>(header, content, functions));
-
-		}
-
-		@Test
 		@DisplayName("a line break in a cell should be printed in file as content.")
-		public void testPrintPeopleSuccessfullyWithLinebreakInContent() throws Exception {
+		void testPrintPeopleSuccessfullyWithLinebreakInContent() throws Exception {
 			content = new ArrayList<>();
 			content.add(new Person(18, "Maik", "Must\ner", false, LocalDate.of(2001, 1, 12), 120.21));
 			content.add(new Person(38, "Lisa", "Schuster", true, LocalDate.of(1981, 1, 15), 3010.45));
-			CsvPrinter printer = CsvPrinterFactory.getInstance(new CsvBuilder<>(header, content, functions));
+			de.aschneider.csvprint.document.Printer printer = CsvPrinterFactory
+					.getInstance(new CsvBuilder<>(content, functions));
 
 			String actualContent = new String(printer.print());
 
-			String expectedContent = "Age;Firstname;Lastname;Married ?;Birthday;Income in €\n" //
-					+ "18;Maik;Must\ner;no;12.01.2001;120,21\n" //
-					+ "38;Lisa;Schuster;yes;15.01.1981;3010,45";
+			String expectedContent = """
+					Age;Firstname;Lastname;Married ?;Birthday;Income in €
+					18;Maik;Must
+					er;no;12.01.2001;120,21
+					38;Lisa;Schuster;yes;15.01.1981;3010,45""";
 
 			assertEquals(expectedContent, actualContent);
 		}
 
 		@Test
 		@DisplayName("a line break in a cell and custom quotes should be printed as content.")
-		public void testPrintPeopleSuccessfullyWithLinebreakInContentWithCustomQuotes() throws Exception {
+		void testPrintPeopleSuccessfullyWithLinebreakInContentWithCustomQuotes() throws Exception {
 			content = new ArrayList<>();
 			content.add(new Person(18, "Maik", "Must\ner", false, LocalDate.of(2001, 1, 12), 120.21));
 			content.add(new Person(38, "Lisa", "Schuster", true, LocalDate.of(1981, 1, 15), 3010.45));
-			CsvPrinter printer = CsvPrinterFactory
-					.getInstance(new CsvBuilder<>(header, content, functions).quote("\""));
+
+			de.aschneider.csvprint.document.Printer printer = CsvPrinterFactory
+					.getInstance(new CsvBuilder<>(content, functions).quote("\""));
 
 			String actualContent = new String(printer.print());
 
-			String expectedContent = "\"Age\";\"Firstname\";\"Lastname\";\"Married ?\";\"Birthday\";\"Income in €\"\n" //
-					+ "\"18\";\"Maik\";\"Must\ner\";\"no\";\"12.01.2001\";\"120,21\"\n" //
-					+ "\"38\";\"Lisa\";\"Schuster\";\"yes\";\"15.01.1981\";\"3010,45\"";
+			String expectedContent = """
+					"Age";"Firstname";"Lastname";"Married ?";"Birthday";"Income in €"
+					"18";"Maik";"Must
+					er";"no";"12.01.2001";"120,21"
+					"38";"Lisa";"Schuster";"yes";"15.01.1981";"3010,45\"""";
 
 			assertEquals(expectedContent, actualContent);
 		}

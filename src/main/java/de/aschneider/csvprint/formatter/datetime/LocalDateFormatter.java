@@ -9,7 +9,7 @@ public class LocalDateFormatter implements Formatter {
 
 	private final String pattern;
 
-	public LocalDateFormatter(String pattern) {
+	public LocalDateFormatter(String pattern ) {
 		this.pattern = pattern;
 	}
 

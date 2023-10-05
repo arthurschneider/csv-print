@@ -6,7 +6,6 @@ import java.util.Objects;
 public class CsvBuilder<T> {
 	// Required parameters
 	private final List<T> contents;
-	private final List<String> header;
 	private final List<Column<T>> functions;
 
 	// Optional parameters
@@ -14,14 +13,9 @@ public class CsvBuilder<T> {
 	private String delimiter = ";";
 	private String lineBreak = "\n";
 
-	public CsvBuilder(List<String> header, List<T> contents, List<Column<T>> functions) {
-		this.header = Objects.requireNonNull(header);
+	public CsvBuilder(List<T> contents, List<Column<T>> functions) {
 		this.contents = Objects.requireNonNull(contents);
 		this.functions = Objects.requireNonNull(functions);
-
-		if (header.size() != functions.size()) {
-			throw new IllegalArgumentException("Size of header list and funtions list is not the same");
-		}
 	}
 
 	public CsvBuilder<T> quote(String quote) {
@@ -41,10 +35,6 @@ public class CsvBuilder<T> {
 
 	public List<T> getContents() {
 		return contents;
-	}
-
-	public List<String> getHeader() {
-		return header;
 	}
 
 	public List<Column<T>> getFunctions() {
