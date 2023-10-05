@@ -16,5 +16,7 @@ jobs:
       uses: actions/setup-java@v3
       with:
         java-version: ${{matrix.java}}
+        distribution: 'temurin'
+        architexture: x64
     - name: Test with Maven
       run: mvn test
